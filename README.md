@@ -1,2 +1,2 @@
 # GoTraining
-Go training - The Go programming Language
+The repository to submit the exercises of the Go training in 2016
