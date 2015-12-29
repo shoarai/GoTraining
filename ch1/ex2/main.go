@@ -1,6 +1,6 @@
 // Copyright © 2016 shoarai
 
-// Echo1 prints the index and value of each of
+// Echo prints the index and value of each of
 // its command-line arguments, one per line.
 package main
 
