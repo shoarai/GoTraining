@@ -27,8 +27,8 @@ import (
 var palette = []color.Color{color.Black, color.RGBA{0x00, 0xff, 0x00, 0xff}}
 
 const (
-	backgroundColorIndex = 0 	// background color in palette
-	lineColorIndex = 1 			// line color in palette
+	backgroundColorIndex = 0 // background color in palette
+	lineColorIndex       = 1 // line color in palette
 )
 
 func main() {

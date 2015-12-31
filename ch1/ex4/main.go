@@ -48,16 +48,16 @@ func countLines(f *os.File, lines map[string]Line, filename string) {
 		if !stringInStrings(filename, count.Files) {
 			count.Files = append(count.Files, filename)
 		}
-		lines[input.Text()] = count;
+		lines[input.Text()] = count
 	}
 	// NOTE: ignoring potential errors from input.Err()
 }
 
 func stringInStrings(str string, strs []string) bool {
- 	for _, s := range strs {
- 		if s == str {
- 			return true
- 		}
- 	}
- 	return false
- }
+	for _, s := range strs {
+		if s == str {
+			return true
+		}
+	}
+	return false
+}
