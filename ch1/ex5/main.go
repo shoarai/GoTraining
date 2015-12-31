@@ -2,7 +2,8 @@
 
 // Run with "web" command-line argument for web server.
 
-// Lissajous generates GIF animations of random Lissajous figures.
+// Lissajous generates GIF animations of random Lissajous figures
+// in green on black.
 package main
 
 import (
@@ -23,8 +24,9 @@ import (
 	"time"
 )
 
-//var palette = []color.Color{color.White, color.Black}
-var palette = []color.Color{color.Black, color.RGBA{0x00, 0xff, 0x00, 0xff}}
+var palette = []color.Color{
+	color.Black,
+	color.RGBA{0x00, 0xff, 0x00, 0xff}}
 
 const (
 	backgroundColorIndex = 0 // background color in palette
