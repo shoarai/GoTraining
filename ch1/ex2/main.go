@@ -1,4 +1,5 @@
 // Copyright © 2016 shoarai
+// License: https://creativecommons.org/licenses/by-nc-sa/4.0/
 
 // Echo prints the index and value of each of
 // its command-line arguments, one per line.

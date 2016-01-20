@@ -1,4 +1,5 @@
 // Copyright © 2016 shoarai
+// License: https://creativecommons.org/licenses/by-nc-sa/4.0/
 
 // Fetch prints the content found at each specified URL
 // by http protocol

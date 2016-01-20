@@ -1,4 +1,5 @@
 // Copyright © 2016 shoarai
+// License: https://creativecommons.org/licenses/by-nc-sa/4.0/
 
 // Run with "web" command-line argument for web server.
 

@@ -1,4 +1,5 @@
 // Copyright © 2016 shoarai
+// License: https://creativecommons.org/licenses/by-nc-sa/4.0/
 
 // Dup2 prints the count and text of lines that appear more than once
 // in the input and the names of files in which the text appears.
