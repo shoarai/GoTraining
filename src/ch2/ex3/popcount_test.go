@@ -9,6 +9,22 @@ import (
 	"ch2/ex3"
 )
 
+// -- Tests --
+
+func TestPopCount(t *testing.T) {
+	testPopCount(t, popcount.PopCount, 0x0, 0)
+	testPopCount(t, popcount.PopCount, 0xffff, 16)
+	testPopCount(t, popcount.PopCount, 0xfffefffe, 30)
+	testPopCount(t, popcount.PopCount, 0xffffffffffffffff, 64)
+}
+
+func testPopCount(t *testing.T, popCount func(uint64) int, val uint64, count int) {
+	c := popCount(val)
+	if c != count {
+		t.Errorf("PopCount(%x) = %d, want %d", val, c, count)
+	}
+}
+
 // -- Benchmarks --
 
 func BenchmarkPopCount(b *testing.B) {
