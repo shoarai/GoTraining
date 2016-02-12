@@ -15,15 +15,15 @@ import (
 )
 
 func main() {
-	input := os.Args[1:]
-	if len(input) == 0 {
+	inputs := os.Args[1:]
+	if len(inputs) == 0 {
 		var str string
 		fmt.Scan(&str)
-		input = make([]string, 1)
-		input[0] = str
+		inputs = make([]string, 1)
+		inputs[0] = str
 	}
 
-	for _, arg := range input {
+	for _, arg := range inputs {
 		val, err := strconv.ParseFloat(arg, 64)
 		if err != nil {
 			fmt.Fprintf(os.Stderr, "cf: %v\n", err)
