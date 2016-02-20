@@ -10,7 +10,6 @@ To install go env by Homebrew:
 ```sh
 $ brew install go
 ```
-
 To set GOPATH:
 ```sh
 $ export GOPATH=$HOME/Go/GoTraining
@@ -19,16 +18,15 @@ $ export GOPATH=$HOME/Go/GoTraining
 #### Usage
 To run a test:
 ```sh
-$ go test ch1/ex1
+$ go test ch1/ex1/main.go
 ```
-
 To run a benchmark test:
 ```sh
 $ go test ch1/ex1/main.go -bench=.
 ```
 
 #### Go tool
-To get go tool:
+To get a go tool:
 ```sh
 $ go get URLofTool
 ```
