@@ -11,8 +11,8 @@ import (
 	"io/ioutil"
 	"net/http"
 	"os"
-	"time"
 	"path"
+	"time"
 )
 
 func main() {
@@ -42,7 +42,7 @@ func fetch(url string, ch chan<- string) {
 	}
 
 	_, file := path.Split(url)
-	err = ioutil.WriteFile(file + ".txt", body, 0666)
+	err = ioutil.WriteFile(file+".txt", body, 0666)
 	if err != nil {
 		ch <- fmt.Sprint(err) // send to channel ch
 		return
