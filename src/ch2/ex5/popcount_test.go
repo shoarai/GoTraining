@@ -12,14 +12,19 @@ import (
 // -- Test --
 
 func TestPopCountByLowestBit(t *testing.T) {
-	count := popcount.PopCountByLowestBit(0)
-	if count != 0 {
-		t.Error(count, "out!")
-	}
+	test := testPopCount(t, popcount.PopCountByLowestBit)
+	test(0x0, 0)
+	test(0xffff, 16)
+	test(0xfffefffe, 30)
+	test(0xffffffffffffffff, 64)
+}
 
-	count = popcount.PopCountByLowestBit(255)
-	if count != 8 {
-		t.Error(count, "out!")
+func testPopCount(t *testing.T, popCount func(uint64) int) func(val uint64, count int) {
+	return func(val uint64, count int) {
+		c := popCount(val)
+		if c != count {
+			t.Errorf("PopCount(%x) = %d, want %d", val, c, count)
+		}
 	}
 }
 
