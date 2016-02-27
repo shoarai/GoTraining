@@ -4,35 +4,42 @@
 package popcount_test
 
 import (
-	"testing"
-
 	"ch2/ex3"
+	"testing"
 )
+
+type testData struct {
+	input    uint64
+	expected int
+}
 
 // -- Tests --
 
 func TestPopCount(t *testing.T) {
-	test := testPopCount(t, popcount.PopCount)
-	test(0x0, 0)
-	test(0xffff, 16)
-	test(0xfffefffe, 30)
-	test(0xffffffffffffffff, 64)
+	testPopCounts(t, popcount.PopCount)
 }
-
 func TestPopCountByLoop(t *testing.T) {
-	test := testPopCount(t, popcount.PopCountByLoop)
-	test(0x0, 0)
-	test(0xffff, 16)
-	test(0xfffefffe, 30)
-	test(0xffffffffffffffff, 64)
+	testPopCounts(t, popcount.PopCountByLoop)
 }
 
-func testPopCount(t *testing.T, popCount func(uint64) int) func(val uint64, count int) {
-	return func(val uint64, count int) {
-		c := popCount(val)
-		if c != count {
-			t.Errorf("PopCount(%x) = %d, want %d", val, c, count)
-		}
+func testPopCounts(t *testing.T, popCount func(uint64) int) {
+	datum := [...]testData{
+		{input: 0x0, expected: 0},
+		{0x0, 0},
+		{0xffff, 16},
+		{0xfffefffe, 30},
+		{0xffffffffffffffff, 64},
+	}
+
+	for _, d := range datum {
+		testPopCount(t, popCount, d.input, d.expected)
+	}
+}
+
+func testPopCount(t *testing.T, popCount func(uint64) int, val uint64, count int) {
+	c := popCount(val)
+	if c != count {
+		t.Errorf("PopCount(%x) = %d, want %d", val, c, count)
 	}
 }
 

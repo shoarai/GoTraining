@@ -14,15 +14,15 @@ import (
 
 func main() {
 	start := time.Now()
-	GetOSArgsInefficient()
+	getOSArgsInefficient()
 	timeLong := time.Since(start)
 	start = time.Now()
-	GetOSArgs()
+	getOSArgs()
 	timeShort := time.Since(start)
 	fmt.Println(timeLong, " - ", timeShort, " = ", timeLong-timeShort)
 }
 
-func GetOSArgsInefficient() string {
+func getOSArgsInefficient() string {
 	var s, sep string
 	for i := 0; i < len(os.Args); i++ {
 		s += sep + os.Args[i]
@@ -31,6 +31,6 @@ func GetOSArgsInefficient() string {
 	return s
 }
 
-func GetOSArgs() string {
+func getOSArgs() string {
 	return strings.Join(os.Args[0:], " ")
 }

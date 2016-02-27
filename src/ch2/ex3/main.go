@@ -1,7 +1,7 @@
 // Copyright © 2016 shoarai
 // License: https://creativecommons.org/licenses/by-nc-sa/4.0/
 
-// (Package doc comment intentionally malformed to demonstrate golint.)
+// Package popcount performs number of bits count.
 package popcount
 
 // pc[i] is the population count of i.
@@ -25,11 +25,10 @@ func PopCount(x uint64) int {
 		pc[byte(x>>(7*8))])
 }
 
-// PopCountLoop returns the population count (number of set bits) of x.
+// PopCountByLoop returns the population count (number of set bits) of x.
 func PopCountByLoop(x uint64) int {
 	var count byte
-	var i uint
-	for ; i < 8; i++ {
+	for i := uint(0); i < 8; i++ {
 		count += pc[byte(x>>(i*8))]
 	}
 	return int(count)

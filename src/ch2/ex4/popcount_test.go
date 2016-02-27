@@ -4,9 +4,8 @@
 package popcount_test
 
 import (
-	"testing"
-
 	"ch2/ex4"
+	"testing"
 )
 
 // -- Test --
