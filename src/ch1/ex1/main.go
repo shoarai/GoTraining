@@ -11,5 +11,5 @@ import (
 )
 
 func main() {
-	fmt.Println(strings.Join(os.Args[0:], " "))
+	fmt.Println(strings.Join(os.Args, " "))
 }
