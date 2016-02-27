@@ -4,8 +4,9 @@
 package popcount_test
 
 import (
-	"ch2/ex3"
 	"testing"
+
+	"github.com/GoTraining/ch2/ex3"
 )
 
 type testData struct {

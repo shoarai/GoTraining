@@ -4,8 +4,9 @@
 package popcount_test
 
 import (
-	"ch2/ex4"
 	"testing"
+
+	"github.com/GoTraining/ch2/ex4"
 )
 
 // -- Test --
