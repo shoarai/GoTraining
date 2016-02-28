@@ -1,7 +1,7 @@
 // Copyright © 2016 shoarai
 // License: https://creativecommons.org/licenses/by-nc-sa/4.0/
 
-// Package popcount performs number of bits count.
+// Package popcount counts number of bits.
 package popcount
 
 // PopCountLoop64 returns the population count (number of set bits) of x.
