@@ -3,8 +3,7 @@
 
 // Run with "web" command-line argument for web server.
 
-// Lissajous generates GIF animations of random Lissajous figures.
-// The number of cycle is set a value of a query "cycles".
+// Surface computes an SVG rendering of a 3-D surface function.
 package main
 
 import (
@@ -45,35 +44,43 @@ func main() {
 		log.Fatal(http.ListenAndServe("localhost:8000", nil))
 		return
 	}
-	// lissajous(os.Stdout, defaultCycles)
 }
 
 func handler(w http.ResponseWriter, r *http.Request) {
 	if err := r.ParseForm(); err != nil {
 		log.Print(err)
 	}
-	width := 600
-	height := 320
 	for k, v := range r.Form {
 		if k == "width" {
-			if c, err := strconv.Atoi(v[0]); err == nil {
-				width = c
+			if val, err := strconv.Atoi(v[0]); err == nil {
+				setWidth(val)
 			}
 		} else if k == "height" {
-			if c, err := strconv.Atoi(v[0]); err == nil {
-				height = c
+			if val, err := strconv.Atoi(v[0]); err == nil {
+				setHeight(val)
+			}
+		} else if k == "cells" {
+			if val, err := strconv.Atoi(v[0]); err == nil {
+				setCells(val)
 			}
 		}
 	}
 	w.Header().Set("Content-Type", "image/svg+xml")
-	setSize(width, height)
 	svg(w, width, height)
 }
 
-func setSize(w int, h int) {
-	width, height = w, h                   // canvas size in pixels
+func setWidth(w int) {
+	width = w                              // canvas size in pixels
 	xyscale = float64(width) / 2 / xyrange // pixels per x or y unit
-	zscale = float64(height) * 0.4         // pixels per z unit
+}
+
+func setHeight(h int) {
+	height = h                     // canvas size in pixels
+	zscale = float64(height) * 0.4 // pixels per z unit
+}
+
+func setCells(c int) {
+	cells = c
 }
 
 func svg(w io.Writer, width int, height int) {
