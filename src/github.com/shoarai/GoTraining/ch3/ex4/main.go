@@ -7,7 +7,7 @@
 package main
 
 import (
-	"io"
+	"fmt"
 	"math"
 	"math/rand"
 	"os"
@@ -47,9 +47,12 @@ func main() {
 }
 
 func handler(w http.ResponseWriter, r *http.Request) {
+	w.Header().Set("Content-Type", "image/svg+xml")
+
 	if err := r.ParseForm(); err != nil {
 		log.Print(err)
 	}
+
 	for k, v := range r.Form {
 		if k == "width" {
 			if val, err := strconv.Atoi(v[0]); err == nil {
@@ -65,8 +68,7 @@ func handler(w http.ResponseWriter, r *http.Request) {
 			}
 		}
 	}
-	w.Header().Set("Content-Type", "image/svg+xml")
-	svg(w, width, height)
+	fmt.Fprint(w, svg(width, height))
 }
 
 func setWidth(w int) {
@@ -83,11 +85,10 @@ func setCells(c int) {
 	cells = c
 }
 
-func svg(w io.Writer, width int, height int) {
-	out := "<svg xmlns='http://www.w3.org/2000/svg' " +
-		"style='stroke: grey; fill: white; stroke-width: 0.7' " +
-		"width='" + strconv.Itoa(width) + "' " +
-		"height='" + strconv.Itoa(height) + "'>"
+func svg(width int, height int) string {
+	out := fmt.Sprintf("<svg xmlns='http://www.w3.org/2000/svg' "+
+		"style='stroke: grey; fill: white; stroke-width: 0.7' "+
+		"width='%d' height='%d'>", width, height)
 	for i := 0; i < cells; i++ {
 		for j := 0; j < cells; j++ {
 			ax, ay, ok := corner(i+1, j)
@@ -106,20 +107,13 @@ func svg(w io.Writer, width int, height int) {
 			if !ok {
 				continue
 			}
-			out += "<polygon points='" +
-				strconv.FormatFloat(ax, 'f', 4, 64) + "," +
-				strconv.FormatFloat(ay, 'f', 4, 64) + "," +
-				strconv.FormatFloat(bx, 'f', 4, 64) + "," +
-				strconv.FormatFloat(by, 'f', 4, 64) + "," +
-				strconv.FormatFloat(cx, 'f', 4, 64) + "," +
-				strconv.FormatFloat(cy, 'f', 4, 64) + "," +
-				strconv.FormatFloat(dx, 'f', 4, 64) + "," +
-				strconv.FormatFloat(dy, 'f', 4, 64) + "'/>\n"
+			out += fmt.Sprintf("<polygon points='%g,%g %g,%g %g,%g %g,%g'/>\n",
+				ax, ay, bx, by, cx, cy, dx, dy)
 		}
 	}
 
 	out += "</svg>"
-	w.Write([]byte(out))
+	return out
 }
 
 func corner(i, j int) (float64, float64, bool) {
