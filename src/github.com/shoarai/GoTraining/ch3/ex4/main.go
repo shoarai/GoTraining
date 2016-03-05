@@ -1,16 +1,12 @@
 // Copyright © 2016 shoarai
 // License: https://creativecommons.org/licenses/by-nc-sa/4.0/
 
-// Run with "web" command-line argument for web server.
-
 // Surface computes an SVG rendering of a 3-D surface function.
 package main
 
 import (
 	"fmt"
 	"math"
-	"math/rand"
-	"os"
 	"strconv"
 )
 
@@ -18,7 +14,6 @@ import (
 import (
 	"log"
 	"net/http"
-	"time"
 )
 
 const (
@@ -34,16 +29,8 @@ var zscale = float64(height) * 0.4         // pixels per z unit
 var cells = 100                            // number of grid cells
 
 func main() {
-	// The sequence of images is deterministic unless we seed
-	// the pseudo-random number generator using the current time.
-	// Thanks to Randall McPherson for pointing out the omission.
-	rand.Seed(time.Now().UTC().UnixNano())
-
-	if len(os.Args) > 1 && os.Args[1] == "web" {
-		http.HandleFunc("/", handler)
-		log.Fatal(http.ListenAndServe("localhost:8000", nil))
-		return
-	}
+	http.HandleFunc("/", handler)
+	log.Fatal(http.ListenAndServe("localhost:8000", nil))
 }
 
 func handler(w http.ResponseWriter, r *http.Request) {

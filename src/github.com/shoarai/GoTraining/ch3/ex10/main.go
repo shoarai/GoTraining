@@ -1,10 +1,10 @@
 // Copyright © 2016 shoarai
 // License: https://creativecommons.org/licenses/by-nc-sa/4.0/
 
-// Comma prints its argument numbers with a comma at each power of 1000.
+// Comma prints its argument numbers with a comma at each power of 1000 by bytes buffer.
 //
 // Example:
-// 	$ go build gopl.io/ch3/comma
+// 	$ go build github.com/shoarai/GoTraining/ch3/ex10/main.go
 //	$ ./comma 1 12 123 1234 1234567890
 // 	1
 // 	12
