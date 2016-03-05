@@ -28,18 +28,18 @@ func main() {
 
 // comma inserts commas in a non-negative decimal integer string.
 func comma(s string) string {
-	digit := 3
+	const digit = 3
 	n := len(s)
 	if n <= digit {
 		return s
 	}
 
 	var buf bytes.Buffer
-	for i := 0; i < n; i++ {
-		if (n-i)%digit == 0 {
+	for i, v := range s {
+		if i != 0 && (n-i)%digit == 0 {
 			buf.WriteString(",")
 		}
-		buf.WriteByte(s[i])
+		buf.WriteRune(v)
 	}
 	return buf.String()
 }
