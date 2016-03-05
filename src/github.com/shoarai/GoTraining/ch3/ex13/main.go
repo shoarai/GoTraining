@@ -1,7 +1,7 @@
 // Copyright © 2016 shoarai
 // License: https://creativecommons.org/licenses/by-nc-sa/4.0/
 
-// Netflag demonstrates an integer type used as a bit field.
+// Byte demonstrates byte size.
 package main
 
 import "fmt"
