@@ -19,10 +19,10 @@ type testData struct {
 func TestComma(t *testing.T) {
 	datum := [...]testData{
 		{input: "1", expected: "1"},
-		{input: "1234", expected: "1,234"},
-		{input: "-1234", expected: "-1,234"},
-		{input: "1234.5", expected: "1,234.5"},
-		{input: "12345.67890", expected: "12,345.67890"},
+		{"1234", "1,234"},
+		{"-1234", "-1,234"},
+		{"1234.5", "1,234.5"},
+		{"12345.67890", "12,345.67890"},
 	}
 
 	for _, d := range datum {

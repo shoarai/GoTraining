@@ -19,11 +19,11 @@ type testData struct {
 func TestAnagram(t *testing.T) {
 	datum := [...]testData{
 		{input: []string{"", ""}, expected: true},
-		{input: []string{"text", "text"}, expected: true},
-		{input: []string{"anagram", "graaman"}, expected: true},
-		{input: []string{"8789534", "9878435"}, expected: true},
-		{input: []string{"test", "tess"}, expected: false},
-		{input: []string{"tex", "te"}, expected: false},
+		{[]string{"text", "text"}, true},
+		{[]string{"anagram", "graaman"}, true},
+		{[]string{"8789534", "9878435"}, true},
+		{[]string{"test", "tess"}, false},
+		{[]string{"tex", "te"}, false},
 	}
 	for _, d := range datum {
 		test(t, d.input[0], d.input[1], d.expected)
