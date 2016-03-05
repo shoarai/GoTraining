@@ -6,7 +6,7 @@ package popcount_test
 import (
 	"testing"
 
-	"github.com/GoTraining/ch2/ex4"
+	"github.com/shoarai/GoTraining/ch2/ex4"
 )
 
 // -- Test --
