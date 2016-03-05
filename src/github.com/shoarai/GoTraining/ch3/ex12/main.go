@@ -10,67 +10,24 @@
 //	$ ./main text tteo
 // 	non anagram
 //
-package ana
+package main
 
 import (
-	"bytes"
 	"fmt"
 	"os"
-	"strings"
+
+	"github.com/shoarai/GoTraining/ch3/ex12/anagram"
 )
 
 func main() {
-	for i := 1; i < len(os.Args); i++ {
-		fmt.Printf("  %s\n", comma(os.Args[i]))
-	}
-}
-
-// Anagram d
-func Anagram() bool {
-	return true
-}
-
-// comma inserts commas in a integer or decimal string.
-func comma(s string) string {
-	if s == "" {
-		return s
+	if len(os.Args) != 3 {
+		fmt.Println("Input two argumens")
+		return
 	}
 
-	// Write a sign
-	var buf bytes.Buffer
-	start := 0
-	if s[0] == '+' || s[0] == '-' {
-		buf.WriteByte(s[0])
-		start++
+	if anagram.Anagram(os.Args[1], os.Args[2]) {
+		fmt.Println("anagram")
+	} else {
+		fmt.Println("non anagram")
 	}
-
-	// Write a integer part
-	dot := strings.LastIndex(s, ".")
-	if dot == -1 {
-		dot = len(s)
-	}
-	buf.WriteString(commaInt(s[start:dot]))
-
-	// Write a decimal part
-	buf.WriteString(s[dot:])
-
-	return buf.String()
-}
-
-// comma inserts commas in a non-negative decimal integer string.
-func commaInt(s string) string {
-	const digit = 3
-	n := len(s)
-	if n <= digit {
-		return s
-	}
-
-	var buf bytes.Buffer
-	for i, v := range s {
-		if i != 0 && (n-i)%digit == 0 {
-			buf.WriteString(",")
-		}
-		buf.WriteRune(v)
-	}
-	return buf.String()
 }

@@ -5,7 +5,7 @@
 //
 // Example:
 // 	$ go build github.com/shoarai/GoTraining/ch3/ex10/main.go
-//	$ ./comma 1 12 123 1234 1234567890
+//	$ ./main 1 12 123 1234 1234567890
 // 	1
 // 	12
 // 	123
