@@ -44,9 +44,10 @@ outer:
 			}
 			ints = append(ints, int(x))
 		}
-		l := 6
-		if len(ints) < l {
-			l = len(ints)
+		l := len(ints)
+		if l > 6 {
+			fmt.Println("Input array in length of equal or smaller than six")
+			continue outer
 		}
 		var inta [6]int
 		copy(inta[:], ints[:l])
