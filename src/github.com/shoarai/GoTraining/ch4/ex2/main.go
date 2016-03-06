@@ -1,7 +1,8 @@
 // Copyright © 2016 shoarai
 // License: https://creativecommons.org/licenses/by-nc-sa/4.0/
 
-// The sha command computes the SHA hash (an array) of a string.
+// The sha command computes the SHA hash (an array)
+// with an optional length of a string.
 // Example:
 // $ go build github.com/shoarai/GoTraining/ch4/ex2/main.go
 // $ ./main x
