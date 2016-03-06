@@ -1,7 +1,8 @@
 // Copyright © 2016 shoarai
 // License: https://creativecommons.org/licenses/by-nc-sa/4.0/
 
-// The sha256 command computes the SHA256 hash (an array) of a string.
+// Compatebit computes the number of different bit of
+// the two SHA256 hashs (an array) of a string.
 package main
 
 import (

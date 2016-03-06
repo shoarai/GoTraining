@@ -1,7 +1,7 @@
 // Copyright © 2016 shoarai
 // License: https://creativecommons.org/licenses/by-nc-sa/4.0/
 
-// Package comparebit compare bits
+// Package comparebit compares bits
 package comparebit
 
 // DiffBitCount compare bits
