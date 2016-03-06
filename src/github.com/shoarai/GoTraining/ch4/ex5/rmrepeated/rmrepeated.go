@@ -4,15 +4,18 @@
 // Package rmrepeated removes repeated strings of string slice.
 package rmrepeated
 
-// RemoveRepeated rotates a slice of ints in place.
+// RemoveRepeated removes repeated strings of string slice.
 func RemoveRepeated(str []string) []string {
-	if len(str) < 1 {
+	if len(str) < 2 {
 		return str
 	}
 
-	for i := 1; i < len(str); i++ {
+	l := len(str)
+	for i := 1; i < l; i++ {
 		if str[i-1] == str[i] {
 			str, _ = remove(str, i)
+			l--
+			i--
 		}
 	}
 	return str

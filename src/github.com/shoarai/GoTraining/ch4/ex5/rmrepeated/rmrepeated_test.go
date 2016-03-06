@@ -20,7 +20,7 @@ type testData struct {
 func TestRemoveRepeated(t *testing.T) {
 	datum := [...]testData{
 		{input: []string{"", ""}, expected: []string{""}},
-		{[]string{"text", "text"}, []string{"text"}},
+		{[]string{"text", "text", "text"}, []string{"text"}},
 		{[]string{"01234", "12345", "01234", "01234"}, []string{"01234", "12345", "01234"}},
 	}
 
