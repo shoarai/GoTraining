@@ -34,10 +34,10 @@ func Anagram(s1, s2 string) bool {
 }
 
 func remove(slice []byte, i int) ([]byte, bool) {
-	if i < 0 || i > len(slice) {
+	if i < 0 || i >= len(slice) {
 		var s []byte
 		return s, false
 	}
 	copy(slice[i:], slice[i+1:])
-	return slice, true
+	return slice[:len(slice)-1], true
 }
