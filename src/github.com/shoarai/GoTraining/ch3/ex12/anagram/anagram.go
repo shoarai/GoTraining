@@ -16,7 +16,7 @@ func Anagram(s1, s2 string) bool {
 		ana := false
 		for i := 0; i < len(buf); i++ {
 			if v == rune(buf[i]) {
-				buf = delete(buf, i)
+				buf = remove(buf, i)
 				ana = true
 				break
 			}
@@ -29,13 +29,7 @@ func Anagram(s1, s2 string) bool {
 	return true
 }
 
-func delete(slice []byte, i int) []byte {
-	var b []byte
-	if i > 0 {
-		b = append(b, slice[:i]...)
-	}
-	if i < len(slice)-1 {
-		b = append(b, slice[i+1:]...)
-	}
-	return b
+func remove(slice []byte, i int) []byte {
+	copy(slice[i:], slice[i+1:])
+	return slice
 }
