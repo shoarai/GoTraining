@@ -1,8 +1,7 @@
 // Copyright © 2016 shoarai
 // License: https://creativecommons.org/licenses/by-nc-sa/4.0/
 
-// Rev reverses a slice.
-package rmrepeated
+package rmrepeated_test
 
 import (
 	"testing"
@@ -18,22 +17,33 @@ type testData struct {
 // -- Test --
 
 func TestRemoveRepeated(t *testing.T) {
-	datum := [...]testData{
-		{input: []string{"", ""}, expected: []string{""}},
-		{[]string{"text", "text", "text"}, []string{"text"}},
-		{[]string{"01234", "12345", "01234", "01234"}, []string{"01234", "12345", "01234"}},
-	}
+	d := [...]testData{{
+		input:    []string{"", ""},
+		expected: []string{""},
+	}, {
+		[]string{"text", "text", "text"},
+		[]string{"text"},
+	}, {
+		[]string{"01234", "12345", "01234", "01234"},
+		[]string{"01234", "12345", "01234"},
+	}}
 
-	for _, v := range datum {
-		c := rmrepeated.RemoveRepeated(v.input)
-		if len(c) != len(v.expected) {
-			t.Errorf("RemoveRepeated(%s) = %s, want %s", v.input, c, v.expected)
-		}
-		for i := range c {
-			if i < len(v.expected) && c[i] != v.expected[i] {
-				t.Errorf("RemoveRepeated(%s) = %s, want %s", v.input, c, v.expected)
-				break
-			}
+	for _, v := range d {
+		test(t, v.input, v.expected)
+	}
+}
+
+func test(t *testing.T, s, e []string) {
+	c := rmrepeated.RemoveRepeated(s)
+
+	if len(c) != len(e) {
+		t.Errorf("RemoveRepeated(%s) = %s, want %s", s, c, e)
+		return
+	}
+	for i := range c {
+		if c[i] != e[i] {
+			t.Errorf("RemoveRepeated(%s) = %s, want %s", s, c, e)
+			break
 		}
 	}
 }

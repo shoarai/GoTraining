@@ -10,11 +10,9 @@ func RemoveRepeated(str []string) []string {
 		return str
 	}
 
-	l := len(str)
-	for i := 1; i < l; i++ {
+	for i := 1; i < len(str); i++ {
 		if str[i-1] == str[i] {
 			str, _ = remove(str, i)
-			l--
 			i--
 		}
 	}
