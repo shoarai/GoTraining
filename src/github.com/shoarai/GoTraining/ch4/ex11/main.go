@@ -21,8 +21,7 @@ func main() {
 	}
 
 	repo = github.Repository{
-		Owner: "shoarai",
-		Repo:  "Dammy",
+		"shoarai", "Dammy",
 	}
 
 	fmt.Println("User name: ")
@@ -35,6 +34,8 @@ func main() {
 		create()
 	case "get":
 		get()
+	case "edit":
+		edit()
 	default:
 		fmt.Println("Input command")
 	}
@@ -42,7 +43,7 @@ func main() {
 
 func create() {
 	var issue github.IssueCreateRequest
-	issue.Title = "TestTitle"
+	issue.Title = "TestTitle1"
 	issue.Body = "TestBody"
 	github.CreateIssue(&repo, &issue, &auth)
 }
@@ -52,11 +53,32 @@ func get() {
 	fmt.Println("Issue number: ")
 	fmt.Scan(&num)
 
-	item, err := github.GetIssue(&repo, num, &auth)
+	issue, err := github.GetIssue(&repo, num, &auth)
 	if err != nil {
 		log.Fatal(err)
 		return
 	}
 	fmt.Printf("#%-5d %9.9s %.55s %s\n",
-		item.Number, item.User.Login, item.Title, item.Body)
+		issue.Number, issue.User.Login, issue.Title, issue.Body)
+}
+
+func edit() {
+	var num int
+	fmt.Println("Issue number: ")
+	fmt.Scan(&num)
+
+	currentIssue, err := github.GetIssue(&repo, num, &auth)
+	if err != nil {
+		log.Fatal(err)
+		return
+	}
+
+	var issue github.IssueEditRequest
+	issue.Title = currentIssue.Title
+	issue.Body = currentIssue.Body
+	issue.State = "closed"
+	err = github.EditIssue(&repo, num, &issue, &auth)
+	if err != nil {
+		fmt.Println(err)
+	}
 }
