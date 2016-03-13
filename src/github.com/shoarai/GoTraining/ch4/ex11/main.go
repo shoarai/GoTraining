@@ -5,6 +5,7 @@
 package main
 
 import (
+	"bufio"
 	"fmt"
 	"log"
 	"os"
@@ -16,7 +17,8 @@ var repo github.Repository
 var auth github.Auth
 
 func main() {
-	if len(os.Args[1:]) < 0 {
+	if len(os.Args) < 2 {
+		printCommands()
 		return
 	}
 
@@ -24,9 +26,9 @@ func main() {
 		"shoarai", "Dammy",
 	}
 
-	fmt.Println("User name: ")
+	fmt.Printf("User name: ")
 	fmt.Scan(&auth.UserName)
-	fmt.Println("Password: ")
+	fmt.Printf("Password: ")
 	fmt.Scan(&auth.Password)
 
 	switch os.Args[1] {
@@ -37,20 +39,44 @@ func main() {
 	case "edit":
 		edit()
 	default:
-		fmt.Println("Input command")
+		printCommands()
 	}
+}
+
+func printCommands() {
+	fmt.Println("The commands are:")
+	fmt.Println("\tcreate: create new issue")
+	fmt.Println("\tget: get the issue")
+	fmt.Println("\tedit: edut the issue")
+
 }
 
 func create() {
 	var issue github.IssueCreateRequest
-	issue.Title = "TestTitle1"
-	issue.Body = "TestBody"
+	in := bufio.NewReader(os.Stdin)
+
+	fmt.Printf("Title: ")
+	line, _, err := in.ReadLine()
+	if err != nil {
+		fmt.Println(err)
+		return
+	}
+	issue.Title = string(line)
+
+	fmt.Printf("Body: ")
+	line, _, err = in.ReadLine()
+	if err != nil {
+		fmt.Println(err)
+		return
+	}
+	issue.Body = string(line)
+
 	github.CreateIssue(&repo, &issue, &auth)
 }
 
 func get() {
 	var num int
-	fmt.Println("Issue number: ")
+	fmt.Printf("Issue number: ")
 	fmt.Scan(&num)
 
 	issue, err := github.GetIssue(&repo, num, &auth)
@@ -58,13 +84,16 @@ func get() {
 		log.Fatal(err)
 		return
 	}
-	fmt.Printf("#%-5d %9.9s %.55s %s\n",
-		issue.Number, issue.User.Login, issue.Title, issue.Body)
+
+	fmt.Printf("Title: %s\n", issue.Title)
+	fmt.Printf("State: %s\n", issue.State)
+	fmt.Printf("User: %s\n", issue.User.Login)
+	fmt.Printf("Body: %s\n", issue.Body)
 }
 
 func edit() {
 	var num int
-	fmt.Println("Issue number: ")
+	fmt.Printf("Issue number: ")
 	fmt.Scan(&num)
 
 	currentIssue, err := github.GetIssue(&repo, num, &auth)
@@ -74,9 +103,43 @@ func edit() {
 	}
 
 	var issue github.IssueEditRequest
-	issue.Title = currentIssue.Title
-	issue.Body = currentIssue.Body
-	issue.State = "closed"
+	in := bufio.NewReader(os.Stdin)
+	fmt.Printf("Current Title: %s\n", currentIssue.Title)
+	fmt.Printf("    New Title: ")
+	line, _, err := in.ReadLine()
+	if err != nil {
+		fmt.Println(err)
+		return
+	}
+	issue.Title = string(line)
+	if issue.Title == "" {
+		issue.Title = currentIssue.Title
+	}
+
+	fmt.Printf("Current Body: %s\n", currentIssue.Body)
+	fmt.Printf("    New Body: ")
+	line, _, err = in.ReadLine()
+	if err != nil {
+		fmt.Println(err)
+		return
+	}
+	issue.Body = string(line)
+	if issue.Body == "" {
+		issue.Body = currentIssue.Body
+	}
+
+	fmt.Printf("Current State: %s\n", currentIssue.State)
+	fmt.Printf("    New State: ")
+	line, _, err = in.ReadLine()
+	if err != nil {
+		fmt.Println(err)
+		return
+	}
+	issue.State = string(line)
+	if issue.State == "" {
+		issue.State = currentIssue.State
+	}
+
 	err = github.EditIssue(&repo, num, &issue, &auth)
 	if err != nil {
 		fmt.Println(err)
