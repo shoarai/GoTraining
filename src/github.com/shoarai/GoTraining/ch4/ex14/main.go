@@ -2,6 +2,9 @@
 // License: https://creativecommons.org/licenses/by-nc-sa/4.0/
 
 // Issueshtml prints an HTML table of issues matching the search terms.
+// Example:
+// $ go buid github.com/shoarai/GoTraining/ch4/ex14/main.go
+// $ ./main repo:golang/go commenter:gopherbot json encoder
 package main
 
 import (
@@ -40,8 +43,10 @@ type User struct {
 }
 
 type Milestone struct {
-	Title   string
-	HTMLURL string `json:"html_url"`
+	Number      int
+	Title       string
+	HTMLURL     string `json:"html_url"`
+	Description string
 }
 
 var issueList = template.Must(template.New("issuelist").Parse(`
@@ -66,6 +71,38 @@ var issueList = template.Must(template.New("issuelist").Parse(`
 </table>
 `))
 
+var milestoneList = template.Must(template.New("milestoneList").Parse(`
+<h1>milestones</h1>
+<table>
+<tr style='text-align: left'>
+  <th>#</th>
+	<th>Title</th>
+  <th>Description</th>
+</tr>
+{{range .Items}}
+<tr>
+  <td>{{.Milestone.Number}}</td>
+	<td><a href='{{.Milestone.HTMLURL}}'>{{.Milestone.Title}}</a></td>
+	<td>{{.Milestone.Description}}</td>
+</tr>
+{{end}}
+</table>
+`))
+
+var userList = template.Must(template.New("userList").Parse(`
+<h1>users</h1>
+<table>
+<tr style='text-align: left'>
+	<th>Name</th>
+</tr>
+{{range .Items}}
+<tr>
+	<td><a href='{{.User.HTMLURL}}'>{{.User.Login}}</a></td>
+</tr>
+{{end}}
+</table>
+`))
+
 func main() {
 	http.HandleFunc("/", handler)
 	log.Fatal(http.ListenAndServe("localhost:8000", nil))
@@ -78,6 +115,14 @@ func handler(w http.ResponseWriter, r *http.Request) {
 	}
 
 	if err := issueList.Execute(w, result); err != nil {
+		log.Fatal(err)
+	}
+
+	if err := milestoneList.Execute(w, result); err != nil {
+		log.Fatal(err)
+	}
+
+	if err := userList.Execute(w, result); err != nil {
 		log.Fatal(err)
 	}
 }
