@@ -1,7 +1,7 @@
 // Copyright © 2016 shoarai
 // License: https://creativecommons.org/licenses/by-nc-sa/4.0/
 
-// Mandelbrot emits a PNG image of the Mandelbrot fractal.
+// Mandelbrot emits a super-sampling PNG image of the Mandelbrot fractal.
 package main
 
 import (
@@ -14,25 +14,28 @@ import (
 
 func main() {
 	img := mandelbrotImage()
-	img = superSampling(img)
+	img = superSampling(img, 2)
 	png.Encode(os.Stdout, img) // NOTE: ignoring errors
 }
 
-func superSampling(img image.Image) image.Image {
+func superSampling(img image.Image, rate int) image.Image {
 	bounds := img.Bounds()
-	lowImg := image.NewRGBA(bounds)
-	for py := bounds.Min.Y; py < bounds.Max.Y; py++ {
-		for px := bounds.Min.X; px < bounds.Max.X; px++ {
-			lowImg.Set(px, py, averageColor(img, px, py))
+	lowImg := image.NewRGBA(image.Rect(0, 0, bounds.Dx()/rate, bounds.Dy()/rate))
+	var x, y int
+	for py := bounds.Min.Y; py < bounds.Max.Y; py += rate {
+		for px := bounds.Min.X; px < bounds.Max.X; px += rate {
+			lowImg.Set(px/2, py/2, averageColor(img, px, py, rate))
+			x++
 		}
+		y++
 	}
 	return lowImg
 }
 
-func averageColor(img image.Image, px, py int) color.Color {
+func averageColor(img image.Image, px, py, num int) color.Color {
 	var red, blue, green uint32
-	for i := px; i < px+2; i++ {
-		for j := py; j < py+2; j++ {
+	for i := px; i < px+num; i++ {
+		for j := py; j < py+num; j++ {
 			r, b, g, _ := img.At(i, j).RGBA()
 			red += r
 			blue += b
@@ -40,10 +43,11 @@ func averageColor(img image.Image, px, py int) color.Color {
 		}
 	}
 
+	nums := uint32(num * num)
 	return color.RGBA{
-		uint8(red >> 2),
-		uint8(blue >> 2),
-		uint8(green >> 2),
+		uint8(red / nums),
+		uint8(blue / nums),
+		uint8(green / nums),
 		255,
 	}
 }
