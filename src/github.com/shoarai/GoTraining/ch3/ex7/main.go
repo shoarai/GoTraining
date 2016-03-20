@@ -49,19 +49,3 @@ func newton(z complex128) color.Color {
 	}
 	return color.Black
 }
-
-func newton2(z complex128) color.Color {
-	const iterations = 37
-	const contrast = 7
-	for i := uint8(0); i < iterations; i++ {
-		z -= (z - 1/(z*z*z)) / 4
-		if cmplx.Abs(z*z*z*z-1) < 1e-6 {
-			b := 255 - contrast*i
-			r := 255 - b
-			g := 0
-			return color.RGBA{uint8(r), uint8(g), uint8(b), 255}
-			//			return color.Gray{255 - contrast*i}
-		}
-	}
-	return color.Black
-}
