@@ -12,14 +12,6 @@ import (
 	"github.com/shoarai/GoTraining/ch4/ex12/xkcd"
 )
 
-func print(comic *xkcd.Comic) {
-	data, err := json.MarshalIndent(&comic, "", "    ")
-	if err != nil {
-		log.Fatalf("JSON marshaling failed: %s", err)
-	}
-	fmt.Printf("%s\n", data)
-}
-
 func main() {
 	var len int
 	fmt.Printf("Load the number of comics: ")
@@ -37,4 +29,12 @@ func main() {
 			fmt.Println("Not loaded comic")
 		}
 	}
+}
+
+func print(comic *xkcd.Comic) {
+	data, err := json.MarshalIndent(&comic, "", "    ")
+	if err != nil {
+		log.Fatalf("JSON marshaling failed: %s", err)
+	}
+	fmt.Printf("%s\n", data)
 }
