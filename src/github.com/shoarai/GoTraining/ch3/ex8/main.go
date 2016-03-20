@@ -10,6 +10,8 @@ import (
 	"image/png"
 	"math/cmplx"
 	"os"
+
+	"github.com/shoarai/GoTraining/ch3/ex8/bigfloatcmplx"
 )
 
 func main() {
@@ -23,18 +25,34 @@ func main() {
 		y := float64(py)/height*(ymax-ymin) + ymin
 		for px := 0; px < width; px++ {
 			x := float64(px)/width*(xmax-xmin) + xmin
-			z := complex(x, y)
 			// Image point (px, py) represents complex value z.
-			img.Set(px, py, mandelbrot64(complex64(z)))
+			img.Set(px, py, mandelbrotBigFloat(x, y))
 		}
 	}
 	png.Encode(os.Stdout, img) // NOTE: ignoring errors
 }
 
-func mandelbrot64(z complex64) color.Color {
+func mandelbrotBigFloat(x, y float64) color.Color {
 	const iterations = 200
 	const contrast = 15
 
+	z := bigfloatcmplx.New(x, y)
+	v := bigfloatcmplx.New(0, 0)
+	for n := uint8(0); n < iterations; n++ {
+		v = bigfloatcmplx.Multi(v, v)
+		v = bigfloatcmplx.Add(v, z)
+		if bigfloatcmplx.Abs(v) > 2 {
+			return color.RGBA{255 - contrast*n, contrast * n, 50, 255}
+		}
+	}
+	return color.Black
+}
+
+func mandelbrot64(x, y float64) color.Color {
+	const iterations = 200
+	const contrast = 15
+
+	z := complex64(complex(x, y))
 	var v complex64
 	for n := uint8(0); n < iterations; n++ {
 		v = v*v + z
@@ -45,10 +63,11 @@ func mandelbrot64(z complex64) color.Color {
 	return color.Black
 }
 
-func mandelbrot128(z complex128) color.Color {
+func mandelbrot128(x, y float64) color.Color {
 	const iterations = 200
 	const contrast = 15
 
+	z := complex(x, y)
 	var v complex128
 	for n := uint8(0); n < iterations; n++ {
 		v = v*v + z
