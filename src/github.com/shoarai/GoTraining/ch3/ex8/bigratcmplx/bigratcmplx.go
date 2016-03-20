@@ -1,7 +1,7 @@
 // Copyright © 2016 shoarai
 // License: https://creativecommons.org/licenses/by-nc-sa/4.0/
 
-package bigfloatcmplx
+package bigratcmplx
 
 import (
 	"math"
@@ -9,14 +9,14 @@ import (
 )
 
 type Complex struct {
-	R *big.Float
-	I *big.Float
+	R *big.Rat
+	I *big.Rat
 }
 
 func New(x, y float64) *Complex {
 	var c Complex
-	c.R = big.NewFloat(x)
-	c.I = big.NewFloat(y)
+	c.R = new(big.Rat).SetFloat64(x)
+	c.I = new(big.Rat).SetFloat64(y)
 	return &c
 }
 
@@ -29,8 +29,8 @@ func Add(x, y *Complex) *Complex {
 
 func Multi(x, y *Complex) *Complex {
 	c := New(0, 0)
-	c.R.Sub(new(big.Float).Mul(x.R, y.R), new(big.Float).Mul(x.I, y.I))
-	c.I.Add(new(big.Float).Mul(x.R, y.I), new(big.Float).Mul(x.I, y.R))
+	c.R.Sub(new(big.Rat).Mul(x.R, y.R), new(big.Rat).Mul(x.I, y.I))
+	c.I.Add(new(big.Rat).Mul(x.R, y.I), new(big.Rat).Mul(x.I, y.R))
 	return c
 }
 
