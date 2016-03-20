@@ -13,6 +13,42 @@ import (
 )
 
 func main() {
+	img := mandelbrotImage()
+	img = superSampling(img)
+	png.Encode(os.Stdout, img) // NOTE: ignoring errors
+}
+
+func superSampling(img image.Image) image.Image {
+	bounds := img.Bounds()
+	lowImg := image.NewRGBA(bounds)
+	for py := bounds.Min.Y; py < bounds.Max.Y; py++ {
+		for px := bounds.Min.X; px < bounds.Max.X; px++ {
+			lowImg.Set(px, py, averageColor(img, px, py))
+		}
+	}
+	return lowImg
+}
+
+func averageColor(img image.Image, px, py int) color.Color {
+	var red, blue, green uint32
+	for i := px; i < px+2; i++ {
+		for j := py; j < py+2; j++ {
+			r, b, g, _ := img.At(i, j).RGBA()
+			red += r
+			blue += b
+			green += g
+		}
+	}
+
+	return color.RGBA{
+		uint8(red >> 2),
+		uint8(blue >> 2),
+		uint8(green >> 2),
+		255,
+	}
+}
+
+func mandelbrotImage() image.Image {
 	const (
 		xmin, ymin, xmax, ymax = -2, -2, +2, +2
 		width, height          = 1024, 1024
@@ -28,7 +64,8 @@ func main() {
 			img.Set(px, py, mandelbrot(z))
 		}
 	}
-	png.Encode(os.Stdout, img) // NOTE: ignoring errors
+
+	return img
 }
 
 func mandelbrot(z complex128) color.Color {
@@ -39,42 +76,7 @@ func mandelbrot(z complex128) color.Color {
 	for n := uint8(0); n < iterations; n++ {
 		v = v*v + z
 		if cmplx.Abs(v) > 2 {
-			return color.Gray{255 - contrast*n}
-		}
-	}
-	return color.Black
-}
-
-//!-
-
-// Some other interesting functions:
-
-func acos(z complex128) color.Color {
-	v := cmplx.Acos(z)
-	blue := uint8(real(v)*128) + 127
-	red := uint8(imag(v)*128) + 127
-	return color.YCbCr{192, blue, red}
-}
-
-func sqrt(z complex128) color.Color {
-	v := cmplx.Sqrt(z)
-	blue := uint8(real(v)*128) + 127
-	red := uint8(imag(v)*128) + 127
-	return color.YCbCr{128, blue, red}
-}
-
-// f(x) = x^4 - 1
-//
-// z' = z - f(z)/f'(z)
-//    = z - (z^4 - 1) / (4 * z^3)
-//    = z - (z - 1/z^3) / 4
-func newton(z complex128) color.Color {
-	const iterations = 37
-	const contrast = 7
-	for i := uint8(0); i < iterations; i++ {
-		z -= (z - 1/(z*z*z)) / 4
-		if cmplx.Abs(z*z*z*z-1) < 1e-6 {
-			return color.Gray{255 - contrast*i}
+			return color.RGBA{255 - contrast*n, contrast * n, 50, 255}
 		}
 	}
 	return color.Black
