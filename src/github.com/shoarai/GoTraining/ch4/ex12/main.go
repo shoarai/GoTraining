@@ -1,7 +1,7 @@
 // Copyright © 2016 shoarai
 // License: https://creativecommons.org/licenses/by-nc-sa/4.0/
 
-// Issues prints a table of GitHub issues matching the search terms.
+// xkcd prints comic information of the comics preloaded from xkcd.com.
 package main
 
 import (
