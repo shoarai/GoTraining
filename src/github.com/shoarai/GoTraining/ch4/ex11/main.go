@@ -7,6 +7,7 @@ package main
 import (
 	"bufio"
 	"fmt"
+	"io"
 	"log"
 	"os"
 
@@ -23,7 +24,7 @@ func main() {
 	}
 
 	repo = github.Repository{
-		"shoarai", "Dammy",
+		"shoarai", "Dummy",
 	}
 
 	fmt.Printf("User name: ")
@@ -44,11 +45,10 @@ func main() {
 }
 
 func printCommands() {
-	fmt.Println("The commands are:")
-	fmt.Println("\tcreate: create new issue")
-	fmt.Println("\tget: get the issue")
-	fmt.Println("\tedit: edut the issue")
-
+	fmt.Println(`The commands are:
+	create: create new issue
+	get:    get the issue
+	edit:   edit the issue`)
 }
 
 func create() {
@@ -71,7 +71,13 @@ func create() {
 	}
 	issue.Body = string(line)
 
-	github.CreateIssue(&repo, &issue, &auth)
+	err = github.CreateIssue(&repo, &issue, &auth)
+	if err != nil {
+		fmt.Println(err)
+		return
+	}
+
+	fmt.Println("The issue has been created")
 }
 
 func get() {
@@ -118,12 +124,19 @@ func edit() {
 
 	fmt.Printf("Current Body: %s\n", currentIssue.Body)
 	fmt.Printf("    New Body: ")
-	line, _, err = in.ReadLine()
+	lines, err := readLines()
 	if err != nil {
 		fmt.Println(err)
 		return
 	}
-	issue.Body = string(line)
+	issue.Body = lines
+
+	// line, _, err = in.ReadLine()
+	// if err != nil {
+	// 	fmt.Println(err)
+	// 	return
+	// }
+	// issue.Body = string(line)
 	if issue.Body == "" {
 		issue.Body = currentIssue.Body
 	}
@@ -144,4 +157,22 @@ func edit() {
 	if err != nil {
 		fmt.Println(err)
 	}
+
+	fmt.Println("The issue has been edited")
+}
+
+func readLines() (string, error) {
+	var lines string
+	in := bufio.NewReader(os.Stdin)
+	for {
+		line, _, err := in.ReadLine()
+		if err == io.EOF {
+			break
+		}
+		if err != nil {
+			return "", err
+		}
+		lines += string(line) + "\n"
+	}
+	return lines, nil
 }

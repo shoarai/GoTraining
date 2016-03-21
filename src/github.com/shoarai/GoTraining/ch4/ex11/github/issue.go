@@ -8,7 +8,6 @@ import (
 	"encoding/base64"
 	"encoding/json"
 	"fmt"
-	"io/ioutil"
 	"net/http"
 )
 
@@ -25,18 +24,11 @@ func CreateIssue(repo *Repository, issue *IssueCreateRequest, auth *Auth) error 
 	if err != nil {
 		panic(err)
 	}
-
-	// if resp.StatusCode != http.StatusCreated {
-	// 	resp.Body.Close()
-	// 	return fmt.Errorf("create failed: %s", resp.Status)
-	// }
-
 	defer resp.Body.Close()
 
-	fmt.Println("response Status:", resp.Status)
-	fmt.Println("response Headers:", resp.Header)
-	body, _ := ioutil.ReadAll(resp.Body)
-	fmt.Println("response Body:", string(body))
+	if resp.StatusCode != http.StatusCreated {
+		return fmt.Errorf("create failed: %s", resp.Status)
+	}
 	return nil
 }
 
@@ -52,18 +44,16 @@ func GetIssue(repo *Repository, number int, auth *Auth) (*Issue, error) {
 	if err != nil {
 		panic(err)
 	}
+	defer resp.Body.Close()
 
 	if resp.StatusCode != http.StatusOK {
-		resp.Body.Close()
 		return nil, fmt.Errorf("search query failed: %s", resp.Status)
 	}
 
 	var result Issue
 	if err := json.NewDecoder(resp.Body).Decode(&result); err != nil {
-		resp.Body.Close()
 		return nil, err
 	}
-	resp.Body.Close()
 	return &result, nil
 }
 
@@ -80,17 +70,11 @@ func EditIssue(repo *Repository, num int, issue *IssueEditRequest, auth *Auth) e
 	if err != nil {
 		panic(err)
 	}
+	defer resp.Body.Close()
 
-	fmt.Println("response Status:", resp.Status)
-	// fmt.Println("response Headers:", resp.Header)
-	// body, _ := ioutil.ReadAll(resp.Body)
-	// fmt.Println("response Body:", string(body))
-
-	resp.Body.Close()
 	if resp.StatusCode != http.StatusOK {
 		return fmt.Errorf("search query failed: %s", resp.Status)
 	}
-
 	return nil
 }
 
