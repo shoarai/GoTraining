@@ -109,20 +109,25 @@ func main() {
 }
 
 func handler(w http.ResponseWriter, r *http.Request) {
-	result, err := searchIssues(os.Args[1:])
+	var queries []string
+	if len(os.Args[1:]) != 0 {
+		queries = append(queries, os.Args[1])
+	} else {
+		q := []string{"repo:golang/go", "commenter:gopherbot", "json encoder"}
+		queries = append(queries, q...)
+	}
+
+	issues, err := searchIssues(queries)
 	if err != nil {
 		log.Fatal(err)
 	}
-
-	if err := issueList.Execute(w, result); err != nil {
+	if err := issueList.Execute(w, issues); err != nil {
 		log.Fatal(err)
 	}
-
-	if err := milestoneList.Execute(w, result); err != nil {
+	if err := milestoneList.Execute(w, issues); err != nil {
 		log.Fatal(err)
 	}
-
-	if err := userList.Execute(w, result); err != nil {
+	if err := userList.Execute(w, issues); err != nil {
 		log.Fatal(err)
 	}
 }
