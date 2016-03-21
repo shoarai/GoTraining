@@ -130,13 +130,6 @@ func edit() {
 		return
 	}
 	issue.Body = lines
-
-	// line, _, err = in.ReadLine()
-	// if err != nil {
-	// 	fmt.Println(err)
-	// 	return
-	// }
-	// issue.Body = string(line)
 	if issue.Body == "" {
 		issue.Body = currentIssue.Body
 	}
