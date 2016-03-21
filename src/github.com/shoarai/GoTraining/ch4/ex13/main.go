@@ -15,8 +15,8 @@ import (
 )
 
 func main() {
-	if len(os.Args) < 2 {
-		fmt.Println("Input movie title as argument")
+	if len(os.Args[1:]) != 1 {
+		fmt.Println("Input a movie title as argument")
 		return
 	}
 	title := os.Args[1]
@@ -24,17 +24,17 @@ func main() {
 	movie, err := omdbapi.GetMovie(title)
 	if err != nil {
 		fmt.Fprintf(os.Stderr, "Getting movie failed: %s\n", err)
-		os.Exit(1)
+		return
 	}
 
 	if movie.Title == "" {
 		fmt.Fprintf(os.Stderr, "Movie title of %q is not existed\n", title)
-		os.Exit(1)
+		return
 	}
 
 	err = omdbapi.GetPoster(os.Stdout, movie)
 	if err != nil {
 		fmt.Fprintf(os.Stderr, "Getting poster failed: %s\n", err)
-		os.Exit(1)
+		return
 	}
 }
