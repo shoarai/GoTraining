@@ -22,15 +22,15 @@ import (
 import "crypto/sha256"
 
 func main() {
-	var v1 string
-	var v2 string
-	fmt.Printf("Input value 1: ")
-	fmt.Scan(&v1)
-	fmt.Printf("Input value 2: ")
-	fmt.Scan(&v2)
+	var str1 string
+	var str2 string
+	fmt.Printf("Input string 1: ")
+	fmt.Scan(&str1)
+	fmt.Printf("Input string 2: ")
+	fmt.Scan(&str2)
 
-	c1 := sha256.Sum256([]byte(v1))
-	c2 := sha256.Sum256([]byte(v2))
+	c1 := sha256.Sum256([]byte(str1))
+	c2 := sha256.Sum256([]byte(str2))
 	fmt.Printf("Hash1: %x\nHash2: %x\nDiff bit: %d\n",
 		c1, c2, comparebit.DiffBitCount(&c1, &c2))
 }
