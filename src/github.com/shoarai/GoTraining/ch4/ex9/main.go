@@ -12,8 +12,8 @@ import (
 )
 
 func main() {
-	if len(os.Args) < 2 {
-		fmt.Println("Input file path")
+	if len(os.Args[1:]) == 0 {
+		fmt.Println("Input a file path as argument")
 		return
 	}
 
