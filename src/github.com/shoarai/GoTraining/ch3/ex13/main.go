@@ -19,12 +19,12 @@ const (
 )
 
 func main() {
-	fmt.Println("1KB =", KB, "Byte")
-	fmt.Println("1MB =", MB, "Byte")
-	fmt.Println("1GB =", GB, "Byte")
-	fmt.Println("1TB =", TB, "Byte")
-	fmt.Println("1PB =", PB, "Byte")
-	fmt.Println("1EB =", EB, "Byte")
-	fmt.Println("1ZB =", float64(ZB), "Byte")
-	fmt.Println("1YB =", float64(YB), "Byte")
+	fmt.Printf("1KB = %d Byte\n", KB)
+	fmt.Printf("1MB = %d Byte\n", MB)
+	fmt.Printf("1GB = %d Byte\n", GB)
+	fmt.Printf("1TB = %d Byte\n", TB)
+	fmt.Printf("1PB = %d Byte\n", PB)
+	fmt.Printf("1EB = %d Byte\n", EB)
+	fmt.Printf("1ZB = %f Byte\n", float64(ZB))
+	fmt.Printf("1YB = %f Byte\n", float64(YB))
 }
