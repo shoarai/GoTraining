@@ -8,7 +8,6 @@ package comparebit
 func DiffBitCount(x, y *[32]byte) int {
 	var count int
 
-	// for _, v := range x {
 	for i := 0; i < 32; i++ {
 		for j := 0; j < 8; j++ {
 			if int(x[i])>>uint(j) != int(y[i])>>uint(j) {
