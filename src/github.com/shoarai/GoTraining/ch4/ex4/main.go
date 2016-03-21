@@ -54,7 +54,7 @@ func reverse(s []int) {
 
 // rotate rotates a slice of ints in place.
 func rotate(s []int, i int) ([]int, bool) {
-	if i < 0 || i > len(s) {
+	if i < 0 || i > len(s)-1 {
 		var es []int
 		return es, false
 	}
