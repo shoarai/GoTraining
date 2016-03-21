@@ -22,7 +22,7 @@ func CreateIssue(repo *Repository, issue *IssueCreateRequest, auth *Auth) error 
 	req.Header.Add(authHeader(auth))
 	resp, err := http.DefaultClient.Do(req)
 	if err != nil {
-		panic(err)
+		return err
 	}
 	defer resp.Body.Close()
 
@@ -42,12 +42,12 @@ func GetIssue(repo *Repository, number int, auth *Auth) (*Issue, error) {
 	req.Header.Add(authHeader(auth))
 	resp, err := http.DefaultClient.Do(req)
 	if err != nil {
-		panic(err)
+		return err
 	}
 	defer resp.Body.Close()
 
 	if resp.StatusCode != http.StatusOK {
-		return nil, fmt.Errorf("search query failed: %s", resp.Status)
+		return nil, fmt.Errorf("get failed: %s", resp.Status)
 	}
 
 	var result Issue
@@ -68,12 +68,12 @@ func EditIssue(repo *Repository, num int, issue *IssueEditRequest, auth *Auth) e
 	req.Header.Add(authHeader(auth))
 	resp, err := http.DefaultClient.Do(req)
 	if err != nil {
-		panic(err)
+		return err
 	}
 	defer resp.Body.Close()
 
 	if resp.StatusCode != http.StatusOK {
-		return fmt.Errorf("search query failed: %s", resp.Status)
+		return fmt.Errorf("edit failed: %s", resp.Status)
 	}
 	return nil
 }
