@@ -25,6 +25,6 @@ func main() {
 	fmt.Printf("1TB = %d Byte\n", TB)
 	fmt.Printf("1PB = %d Byte\n", PB)
 	fmt.Printf("1EB = %d Byte\n", EB)
-	fmt.Printf("1ZB = %f Byte\n", float64(ZB))
-	fmt.Printf("1YB = %f Byte\n", float64(YB))
+	fmt.Printf("1ZB = %.0f Byte\n", float64(ZB))
+	fmt.Printf("1YB = %.0f Byte\n", float64(YB))
 }
