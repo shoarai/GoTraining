@@ -26,20 +26,11 @@ func main() {
 		"width='%d' height='%d'>", width, height)
 	for i := 0; i < cells; i++ {
 		for j := 0; j < cells; j++ {
-			ax, ay, ok := corner(i+1, j)
-			if !ok {
-				continue
-			}
-			bx, by, ok := corner(i, j)
-			if !ok {
-				continue
-			}
-			cx, cy, ok := corner(i, j+1)
-			if !ok {
-				continue
-			}
-			dx, dy, ok := corner(i+1, j+1)
-			if !ok {
+			ax, ay := corner(i+1, j)
+			bx, by := corner(i, j)
+			cx, cy := corner(i, j+1)
+			dx, dy := corner(i+1, j+1)
+			if !validateCorner(ax, ay, bx, by, cx, cy, dx, dy) {
 				continue
 			}
 			fmt.Printf("<polygon points='%g,%g %g,%g %g,%g %g,%g'/>\n",
@@ -49,27 +40,30 @@ func main() {
 	fmt.Println("</svg>")
 }
 
-func corner(i, j int) (float64, float64, bool) {
+func validateCorner(corners ...float64) bool {
+	for _, v := range corners {
+		if math.IsNaN(v) || math.IsInf(v, 0) {
+			return false
+		}
+	}
+	return true
+}
+
+func corner(i, j int) (float64, float64) {
 	// Find point (x,y) at corner of cell (i,j).
 	x := xyrange * (float64(i)/cells - 0.5)
 	y := xyrange * (float64(j)/cells - 0.5)
 
 	// Compute surface height z.
-	z, ok := f(x, y)
-	if !ok {
-		return 0, 0, false
-	}
+	z := f(x, y)
 
 	// Project (x,y,z) isometrically onto 2-D SVG canvas (sx,sy).
 	sx := width/2 + (x-y)*cos30*xyscale
 	sy := height/2 + (x+y)*sin30*xyscale - z*zscale
-	return sx, sy, true
+	return sx, sy
 }
 
-func f(x, y float64) (float64, bool) {
+func f(x, y float64) float64 {
 	r := math.Hypot(x, y) // distance from (0,0)
-	if r == 0 {
-		return 0, false
-	}
-	return math.Sin(r) / r, true
+	return math.Sin(r) / r
 }
