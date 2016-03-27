@@ -10,7 +10,7 @@ import (
 	"os"
 	"time"
 
-	"github.com/shoarai/GoTraining/ch4/ex10/github"
+	"./github"
 )
 
 func main() {

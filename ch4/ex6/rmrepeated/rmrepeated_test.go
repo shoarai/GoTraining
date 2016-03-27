@@ -8,7 +8,7 @@ import (
 	"reflect"
 	"testing"
 
-	"github.com/shoarai/GoTraining/ch4/ex6/rmrepeated"
+	"../rmrepeated"
 )
 
 type testData struct {

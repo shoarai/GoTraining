@@ -6,7 +6,7 @@ package rmrepeated_test
 import (
 	"testing"
 
-	"github.com/shoarai/GoTraining/ch4/ex5/rmrepeated"
+	"../rmrepeated"
 )
 
 type testData struct {

@@ -6,7 +6,7 @@ package comparebit_test
 import (
 	"testing"
 
-	"github.com/shoarai/GoTraining/ch4/ex1/comparebit"
+	"../comparebit"
 )
 
 func TestDiffBitCount(t *testing.T) {

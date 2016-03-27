@@ -9,7 +9,7 @@ import (
 	"fmt"
 	"log"
 
-	"github.com/shoarai/GoTraining/ch4/ex12/xkcd"
+	"./xkcd"
 )
 
 func main() {

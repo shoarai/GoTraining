@@ -11,7 +11,7 @@ import (
 	"log"
 	"os"
 
-	"github.com/shoarai/GoTraining/ch4/ex11/github"
+	"./github"
 )
 
 var repo github.Repository

@@ -7,7 +7,7 @@ package main
 import (
 	"fmt"
 
-	"github.com/shoarai/GoTraining/ch4/ex7/rev"
+	"./rev"
 )
 
 func main() {
