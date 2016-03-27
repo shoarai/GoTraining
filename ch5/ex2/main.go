@@ -1,6 +1,6 @@
 // Copyright © 2016 shoarai
 
-// FindTags counts the tag in an HTML document read from standard input.
+// CountElement counts the tag in an HTML document read from standard input.
 package main
 
 import (
@@ -16,18 +16,18 @@ func main() {
 		fmt.Fprintf(os.Stderr, "findlinks1: %v\n", err)
 		os.Exit(1)
 	}
-	tags := make(map[string]int, 0)
-	countTag(tags, doc)
-	for k, v := range tags {
+	elems := make(map[string]int, 0)
+	countElement(elems, doc)
+	for k, v := range elems {
 		fmt.Printf("%s: %d\n", k, v)
 	}
 }
 
-func countTag(tags map[string]int, n *html.Node) {
+func countElement(elems map[string]int, n *html.Node) {
 	if n.Type == html.ElementNode {
-		tags[n.Data]++
+		elems[n.Data]++
 	}
 	for c := n.FirstChild; c != nil; c = c.NextSibling {
-		countTag(tags, c)
+		countElement(elems, c)
 	}
 }
