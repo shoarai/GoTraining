@@ -1,6 +1,7 @@
 // Copyright © 2016 shoarai
 
-// Findlinks1 prints the links in an HTML document read from standard input.
+// textNode prints the texts in an HTML document excepted for the script texts
+// read from standard input.
 package main
 
 import (
