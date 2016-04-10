@@ -5,9 +5,9 @@ package main
 
 import "fmt"
 
-func maxZero(vals ...int) (int, bool) {
+func maxZero(vals ...int) int {
 	if len(vals) == 0 {
-		return 0, false
+		panic("non argument")
 	}
 
 	m := 0
@@ -16,12 +16,12 @@ func maxZero(vals ...int) (int, bool) {
 			m = val
 		}
 	}
-	return m, true
+	return m
 }
 
-func minZero(vals ...int) (int, bool) {
+func minZero(vals ...int) int {
 	if len(vals) == 0 {
-		return 0, false
+		panic("non argument")
 	}
 
 	m := 0
@@ -30,7 +30,7 @@ func minZero(vals ...int) (int, bool) {
 			m = val
 		}
 	}
-	return m, true
+	return m
 }
 
 func max(val int, vals ...int) int {
@@ -55,7 +55,7 @@ func min(val int, vals ...int) int {
 
 func main() {
 	// maxZero
-	fmt.Println(maxZero())           //  "0"
+	// fmt.Println(maxZero())        //  panic
 	fmt.Println(maxZero(3))          //  "3"
 	fmt.Println(maxZero(1, 2, 3, 4)) //  "4"
 
@@ -63,7 +63,7 @@ func main() {
 	fmt.Println(maxZero(values...)) // "4"
 
 	// minZero
-	fmt.Println(minZero())           //  "0"
+	// fmt.Println(minZero())        //  panic
 	fmt.Println(minZero(3))          //  "3"
 	fmt.Println(minZero(1, 2, 3, 4)) //  "1"
 
