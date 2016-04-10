@@ -52,7 +52,7 @@ func printNode(n *html.Node) {
 		for _, a := range n.Attr {
 			fmt.Printf(" %s", a.Key)
 			if a.Val != "" {
-				fmt.Printf("=%s", a.Val)
+				fmt.Printf("=%q", a.Val)
 			}
 		}
 		fmt.Printf("></%s>\n", n.Data)
