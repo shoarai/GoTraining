@@ -39,10 +39,6 @@ func topoSort(m map[string][]string) []string {
 
 	visitAll = func(items map[string]bool) {
 		for k := range items {
-			// if v {
-			// 	return false
-			// }
-			// items[k] = true
 			if !seen[k] {
 				seen[k] = true
 				visitAll(slice2map(m[k]))
