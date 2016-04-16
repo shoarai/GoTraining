@@ -55,7 +55,7 @@ func (s *IntSet) Len() int {
 	return int(count)
 }
 
-// Copy copies the x of the set.
+// Copy copies the set.
 func (s *IntSet) Copy() *IntSet {
 	var x IntSet
 	for _, v := range s.words {

@@ -47,23 +47,13 @@ func TestClear(t *testing.T) {
 
 func TestCopy(t *testing.T) {
 	x := initSetInit(1, 144, 9)
-	exp := x
+	exp := x.String()
 
-	if act := x.Copy(); !equal(act, exp) {
-		t.Errorf("x.Copy() = %s, want %s", act, exp)
+	c := x.Copy()
+	x.Add(10) // dummy data to verify object is copied
+	if act := c.String(); act != exp {
+		t.Errorf("x.String() = %s, want %s", act, exp)
 	}
-}
-
-func equal(x, y *IntSet) bool {
-	if len(x.words) != len(y.words) {
-		return false
-	}
-	for i, v := range x.words {
-		if v != y.words[i] {
-			return false
-		}
-	}
-	return true
 }
 
 func TestAdd(t *testing.T) {
