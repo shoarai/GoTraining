@@ -3,10 +3,7 @@
 // The toposort program prints the nodes of a DAG in topological order.
 package main
 
-import (
-	"fmt"
-	"os"
-)
+import "fmt"
 
 // prereqs maps computer science courses to their prerequisites.
 var prereqs = map[string][]string{
@@ -30,34 +27,35 @@ var prereqs = map[string][]string{
 }
 
 func main() {
-	ss, err := topoSort(prereqs)
-	if err != nil {
-		fmt.Fprintf(os.Stderr, "topoSort: %v\n", err)
-		os.Exit(1)
-	}
-	for i, course := range ss {
+	for i, course := range topoSort(prereqs) {
 		fmt.Printf("%d:\t%s\n", i+1, course)
 	}
 }
 
-func topoSort(m map[string][]string) ([]string, error) {
+func topoSort(m map[string][]string) []string {
 	var order []string
 	seen := make(map[string]bool)
-	var visitAll func(items map[string]bool) bool
+	var visitAll func(items map[string]bool)
 
-	visitAll = func(items map[string]bool) bool {
-		for k, v := range items {
-			if v {
-				return false
-			}
-			v = true
+	visitAll = func(items map[string]bool) {
+		for k := range items {
+			// if v {
+			// 	return false
+			// }
+			// items[k] = true
 			if !seen[k] {
 				seen[k] = true
 				visitAll(slice2map(m[k]))
 				order = append(order, k)
+				for _, i := range m[k] {
+					for _, j := range m[i] {
+						if j == k {
+							panic("topology circulation of " + i + ":" + k)
+						}
+					}
+				}
 			}
 		}
-		return true
 	}
 
 	keys := make(map[string]bool)
@@ -65,10 +63,8 @@ func topoSort(m map[string][]string) ([]string, error) {
 		keys[key] = false
 	}
 
-	if !visitAll(keys) {
-		return nil, fmt.Errorf("error: circulation in topological sort")
-	}
-	return order, nil
+	visitAll(keys)
+	return order
 }
 
 func slice2map(s []string) map[string]bool {
