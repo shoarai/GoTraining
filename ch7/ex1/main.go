@@ -45,10 +45,10 @@ func main() {
 	var bc ByteCounter
 	var wc WordCounter
 	var lc LineCounter
-	var bytes = []byte("hello")
-	bc.Write(bytes)
-	wc.Write(bytes)
-	lc.Write(bytes)
+	bs := []byte("hello")
+	bc.Write(bs)
+	wc.Write(bs)
+	lc.Write(bs)
 	fmt.Println(bc) // "5", = len("hello")
 	fmt.Println(wc) // "1", = Words of "hello"
 	fmt.Println(lc) // "1", = Lines of "hello"
