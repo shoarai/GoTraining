@@ -37,7 +37,7 @@ func LimitReader(r Reader, n int64) Reader {
 
 func main() {
 	str := "hello"
-	n := int64(3)
+	var n int64 = 3
 
 	r := strings.NewReader(str)
 	scanner := bufio.NewScanner(LimitReader(r, n))
@@ -45,5 +45,5 @@ func main() {
 	for scanner.Scan() {
 		limStr += scanner.Text()
 	}
-	fmt.Printf("%s limited with %d is %s\n", str, n, limStr)
+	fmt.Printf("%q limited with length of %d is %q\n", str, n, limStr)
 }
