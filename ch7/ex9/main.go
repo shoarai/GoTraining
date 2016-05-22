@@ -35,7 +35,7 @@ func length(s string) time.Duration {
 	return d
 }
 
-var issueList = template.Must(template.New("issuelist").Parse(`
+var trackHtml = template.Must(template.New("trackHtml").Parse(`
 <table>
 <tr style='text-align: left'>
   <th><a href=".?sort=Title">Title</a></th>
@@ -57,7 +57,7 @@ var issueList = template.Must(template.New("issuelist").Parse(`
 `))
 
 func printTracks(tracks []*Track, w http.ResponseWriter) {
-	if err := issueList.Execute(w, tracks); err != nil {
+	if err := trackHtml.Execute(w, tracks); err != nil {
 		log.Fatal(err)
 	}
 }
