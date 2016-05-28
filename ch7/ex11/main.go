@@ -25,18 +25,22 @@ func main() {
 	log.Fatal(http.ListenAndServe("localhost:8000", nil))
 }
 
-type database map[string]int
+type dollars float32
+
+func (d dollars) String() string { return fmt.Sprintf("$%.2f", d) }
+
+type database map[string]dollars
 
 func (db database) list(w http.ResponseWriter, req *http.Request) {
 	for item, price := range db {
-		fmt.Fprintf(w, "%s: $%d\n", item, price)
+		fmt.Fprintf(w, "%s: %s\n", item, price)
 	}
 }
 
 func (db database) price(w http.ResponseWriter, req *http.Request) {
 	item := req.URL.Query().Get("item")
 	if price, ok := db[item]; ok {
-		fmt.Fprintf(w, "$%d\n", price)
+		fmt.Fprintf(w, "%s\n", price)
 	} else {
 		w.WriteHeader(http.StatusNotFound) // 404
 		fmt.Fprintf(w, "no such item: %q\n", item)
@@ -58,7 +62,7 @@ func (db database) create(w http.ResponseWriter, req *http.Request) {
 		fmt.Fprintf(w, "existing item: %q\n", item)
 	} else {
 		if regexp.MustCompile(`[a-zA-Z][a-zA-Z0-9]+`).Match([]byte(item)) {
-			db[item] = newPrice
+			db[item] = dollars(newPrice)
 			fmt.Fprintf(w, "created item: %q\n", item)
 		} else {
 			fmt.Fprintf(w, "item name error: %q\n", item)
@@ -68,7 +72,7 @@ func (db database) create(w http.ResponseWriter, req *http.Request) {
 
 func (db database) update(w http.ResponseWriter, req *http.Request) {
 	newPriceStr := req.URL.Query().Get("price")
-	newPrice, ok := strconv.Atoi(newPriceStr)
+	newPrice, ok := strconv.ParseFloat(newPriceStr, 32)
 	if ok != nil {
 		w.WriteHeader(http.StatusNotFound) // 404
 		fmt.Fprintf(w, "price error\n")
@@ -77,8 +81,8 @@ func (db database) update(w http.ResponseWriter, req *http.Request) {
 
 	item := req.URL.Query().Get("item")
 	if _, ok := db[item]; ok {
-		db[item] = newPrice
-		fmt.Fprintf(w, "$%d\n", newPrice)
+		db[item] = dollars(newPrice)
+		fmt.Fprintf(w, "%f\n", newPrice)
 	} else {
 		w.WriteHeader(http.StatusNotFound) // 404
 		fmt.Fprintf(w, "no such item: %q\n", item)
