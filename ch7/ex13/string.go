@@ -15,9 +15,7 @@ func (l literal) String() string {
 
 func (u unary) String() string {
 	switch u.op {
-	case '+':
-		fallthrough
-	case '-':
+	case '+', '-':
 		return fmt.Sprintf("%c%s", u.op, u.x)
 	}
 	panic(fmt.Sprintf("unsupported unary operator: %q", u.op))
@@ -25,13 +23,7 @@ func (u unary) String() string {
 
 func (b binary) String() string {
 	switch b.op {
-	case '+':
-		fallthrough
-	case '-':
-		fallthrough
-	case '*':
-		fallthrough
-	case '/':
+	case '+', '-', '*', '/':
 		return fmt.Sprintf("%s %c %s", b.x, b.op, b.y)
 	}
 	panic(fmt.Sprintf("unsupported binary operator: %q", b.op))
@@ -39,11 +31,7 @@ func (b binary) String() string {
 
 func (c call) String() string {
 	switch c.fn {
-	case "pow":
-		fallthrough
-	case "sin":
-		fallthrough
-	case "sqrt":
+	case "pow", "sin", "sqrt":
 		str := c.fn + "("
 		for i, v := range c.args {
 			if i != 0 {
