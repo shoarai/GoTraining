@@ -3,6 +3,7 @@
 package main
 
 import "fmt"
+
 import "./eval"
 
 func main() {
@@ -16,14 +17,24 @@ func main() {
 		return
 	}
 
-	env := eval.Env{"x": 0, "y": 0}
-	for k, _ := range env {
-		fmt.Printf("Input %s:\n", k)
-		var f float64
-		fmt.Scan(&f)
-		env[k] = f
+	env := eval.Env{}
+
+	for {
+		fmt.Println("Input key name:")
+
+		var key string
+		fmt.Scan(&key)
+		if key == "" {
+			break
+		}
+
+		fmt.Printf("Input value of %s:\n", key)
+		var val float64
+		fmt.Scan(&val)
+
+		env[eval.Var(key)] = val
 	}
 
 	ans := expr.Eval(env)
-	fmt.Printf("%s, %s = %f\n", expr, env, ans)
+	fmt.Printf("%s = %f\n", expr, ans)
 }
