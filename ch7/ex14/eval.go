@@ -50,21 +50,25 @@ func (c call) Eval(env Env) float64 {
 		return math.Sin(c.args[0].Eval(env))
 	case "sqrt":
 		return math.Sqrt(c.args[0].Eval(env))
+	case "max":
+		return math.Max(c.args[0].Eval(env), c.args[1].Eval(env))
+		// max := math.SmallestNonzeroFloat64
+		// for _, v := range c.args {
+		// 	f := v.Eval(env)
+		// 	if f > max {
+		// 		max = f
+		// 	}
+		// }
+		// return max
+	case "min":
+		return math.Min(c.args[0].Eval(env), c.args[1].Eval(env))
+		// min := math.MaxFloat64
+		// for _, v := range c.args {
+		// 	f := v.Eval(env)
+		// 	if f < min {
+		// 		min = f
+		// 	}
+		// }
 	}
 	panic(fmt.Sprintf("unsupported function call: %s", c.fn))
-}
-
-func (c multiCall) Eval(env Env) float64 {
-	switch c.fn {
-	case "min":
-		min := 0.0
-		for _, arg := range c.args {
-			e := arg.Eval(env)
-			if e < min {
-				min = e
-			}
-		}
-		return min
-	}
-	panic(fmt.Sprintf("unsupported function call with multi arguments: %s", c.fn))
 }

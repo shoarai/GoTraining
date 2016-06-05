@@ -35,9 +35,3 @@ type call struct {
 	fn   string // one of "pow", "sin", "sqrt"
 	args []Expr
 }
-
-// A call represents a function call expression, e.g., sin(x).
-type multiCall struct {
-	fn   string // one of "min", "max"
-	args []Expr
-}

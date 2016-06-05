@@ -31,7 +31,7 @@ func (b binary) String() string {
 
 func (c call) String() string {
 	switch c.fn {
-	case "pow", "sin", "sqrt":
+	case "pow", "sin", "sqrt", "max", "min":
 		str := c.fn + "("
 		for i, v := range c.args {
 			if i != 0 {
@@ -42,19 +42,4 @@ func (c call) String() string {
 		return str + ")"
 	}
 	panic(fmt.Sprintf("unsupported function call: %s", c.fn))
-}
-
-func (c multiCall) String() string {
-	switch c.fn {
-	case "min":
-		str := c.fn + "("
-		for i, v := range c.args {
-			if i != 0 {
-				str += ", "
-			}
-			str += fmt.Sprintf("%s", v)
-		}
-		return str + ")"
-	}
-	panic(fmt.Sprintf("unsupported function call with multi argument: %s", c.fn))
 }

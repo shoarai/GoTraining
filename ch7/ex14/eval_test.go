@@ -52,8 +52,8 @@ func TestEval(t *testing.T) {
 		{"-1 + -x", Env{"x": 1}, "-2"},
 		{"-1 - x", Env{"x": 1}, "-2"},
 
-		// own equatision
-		{"min(x, 3)", Env{"x": 1}, "1"},
+		// Max and min
+		{"max(x, 3) + min(y, 3)", Env{"x": 12, "y": 1}, "13"},
 	}
 	var prevExpr string
 	for _, test := range tests {
