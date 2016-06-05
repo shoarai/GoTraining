@@ -37,5 +37,6 @@ func handler(w http.ResponseWriter, r *http.Request) {
 	ans := expr.Eval(env)
 	ansStr := strconv.FormatFloat(ans, 'f', 4, 64)
 
-	w.Write([]byte(ansStr))
+	result := inputExpr + "  = " + ansStr
+	w.Write([]byte(result))
 }
