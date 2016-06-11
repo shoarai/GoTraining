@@ -78,9 +78,8 @@ func (x customSort) Swap(i, j int)      { x.t[i], x.t[j] = x.t[j], x.t[i] }
 func (x *customSort) selectKey(key string) error {
 	for i, v := range x.keys {
 		if v == key {
-			keys := []string{key}
-			keys = append(keys, x.keys[:i]...)
-			x.keys = append(keys, x.keys[i+1:]...)
+			x.keys = append(x.keys[:i], x.keys[i+1:]...)
+			x.keys = append([]string{v}, x.keys...)
 			return nil
 		}
 	}
