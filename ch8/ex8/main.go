@@ -41,6 +41,7 @@ func handleConn(c net.Conn) {
 		}
 		<-ticker.C
 	}
+	close(done)
 	ticker.Stop()
 
 	// NOTE: ignoring potential errors from input.Err()
