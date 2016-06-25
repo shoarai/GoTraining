@@ -10,7 +10,11 @@ import (
 	"net"
 )
 
-type client chan<- string // an outgoing message channel
+type clientInfo struct {
+	Name    string
+	Message string
+}
+type client chan<- clientInfo // an outgoing message channel
 
 var (
 	entering = make(chan client)
@@ -26,10 +30,17 @@ func broadcaster() {
 			// Broadcast incoming message to all
 			// clients' outgoing message channels.
 			for cli := range clients {
-				cli <- msg
+				cli <- clientInfo{
+					Message: msg,
+				}
 			}
 
 		case cli := <-entering:
+			for range clients {
+				cli <- clientInfo{
+					Message: "aiueo",
+				}
+			}
 			clients[cli] = true
 
 		case cli := <-leaving:
@@ -40,11 +51,11 @@ func broadcaster() {
 }
 
 func handleConn(conn net.Conn) {
-	ch := make(chan string) // outgoing client messages
+	ch := make(chan clientInfo) // outgoing client messages
 	go clientWriter(conn, ch)
 
 	who := conn.RemoteAddr().String()
-	ch <- "You are " + who
+	ch <- clientInfo{Name: who, Message: "You are " + who}
 	messages <- who + " has arrived"
 	entering <- ch
 
@@ -59,9 +70,9 @@ func handleConn(conn net.Conn) {
 	conn.Close()
 }
 
-func clientWriter(conn net.Conn, ch <-chan string) {
-	for msg := range ch {
-		fmt.Fprintln(conn, msg) // NOTE: ignoring network errors
+func clientWriter(conn net.Conn, ch <-chan clientInfo) {
+	for cli := range ch {
+		fmt.Fprintln(conn, cli.Message) // NOTE: ignoring network errors
 	}
 }
 
