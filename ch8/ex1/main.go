@@ -4,9 +4,11 @@
 package main
 
 import (
+	"fmt"
 	"io"
 	"log"
 	"net"
+	"os"
 	"time"
 )
 
@@ -22,7 +24,13 @@ func handleConn(c net.Conn) {
 }
 
 func main() {
-	listener, err := net.Listen("tcp", "localhost:8000")
+	if len(os.Args) < 2 {
+		fmt.Println("Input port as argument")
+		return
+	}
+	url := "localhost:" + os.Args[1]
+
+	listener, err := net.Listen("tcp", url)
 	if err != nil {
 		log.Fatal(err)
 	}
