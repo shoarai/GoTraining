@@ -27,7 +27,9 @@ func main() {
 }
 
 func mustCopy(dst io.Writer, src io.Reader) {
+	fmt.Println("start")
 	if _, err := io.Copy(dst, src); err != nil {
 		log.Fatal(err)
 	}
+	fmt.Println("end")
 }
