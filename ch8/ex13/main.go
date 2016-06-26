@@ -8,6 +8,7 @@ import (
 	"fmt"
 	"log"
 	"net"
+	"time"
 )
 
 type client chan<- string // an outgoing message channel
@@ -48,15 +49,36 @@ func handleConn(conn net.Conn) {
 	messages <- who + " has arrived"
 	entering <- ch
 
-	input := bufio.NewScanner(conn)
-	for input.Scan() {
-		messages <- who + ": " + input.Text()
-	}
-	// NOTE: ignoring potential errors from input.Err()
+	const timeoutSec = 5
+	done := make(chan struct{})
 
-	leaving <- ch
-	messages <- who + " has left"
-	conn.Close()
+	ticker := time.NewTicker(1 * time.Second)
+	go func() {
+		for countdown := timeoutSec; countdown > 0; countdown-- {
+			select {
+			case <-done:
+				countdown = timeoutSec
+			default:
+			}
+			<-ticker.C
+		}
+
+		ticker.Stop()
+		leaving <- ch
+		messages <- who + " has left"
+		conn.Close()
+	}()
+
+	input := bufio.NewScanner(conn)
+
+	for {
+		if input.Scan() {
+			done <- struct{}{}
+			messages <- who + ": " + input.Text()
+		} else {
+			break
+		}
+	}
 }
 
 func clientWriter(conn net.Conn, ch <-chan string) {
