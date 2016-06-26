@@ -4,6 +4,7 @@
 package main
 
 import (
+	"fmt"
 	"io"
 	"log"
 	"net"
@@ -11,7 +12,13 @@ import (
 )
 
 func main() {
-	conn, err := net.Dial("tcp", "localhost:8000")
+	if len(os.Args) < 2 {
+		fmt.Println("Input ports as argument")
+		return
+	}
+	url := "localhost:" + os.Args[1]
+
+	conn, err := net.Dial("tcp", url)
 	if err != nil {
 		log.Fatal(err)
 	}
