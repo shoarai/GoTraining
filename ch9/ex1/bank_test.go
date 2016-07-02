@@ -35,12 +35,21 @@ func TestBank(t *testing.T) {
 }
 
 func TestWithdraw(t *testing.T) {
-	bank.Deposit(200)
-	fmt.Println("=", bank.Balance())
+	done := make(chan struct{})
 
-	bank.Withdraw(200)
+	go func() {
+		bank.Deposit(200)
+		fmt.Println("=", bank.Balance())
+		done <- struct{}{}
+	}()
 
-	if got, want := bank.Balance(), 300; got != want {
-		t.Errorf("Balance = %d, want %d", got, want)
+	go func() {
+		bank.Withdraw(400)
+		fmt.Println("=", bank.Balance())
+		done <- struct{}{}
+	}()
+
+	if got := bank.Balance(); got < 0 {
+		t.Errorf("Balance = %d, want more than zero", got)
 	}
 }

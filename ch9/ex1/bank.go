@@ -10,8 +10,7 @@ var withdraws = make(chan int) // send amount to withdraw
 func Deposit(amount int) { deposits <- amount }
 func Balance() int       { return <-balances }
 func Withdraw(amount int) bool {
-	balance := Balance()
-	if balance < amount {
+	if Balance() < amount {
 		return false
 	}
 	withdraws <- amount
