@@ -33,3 +33,14 @@ func TestBank(t *testing.T) {
 		t.Errorf("Balance = %d, want %d", got, want)
 	}
 }
+
+func TestWithdraw(t *testing.T) {
+	bank.Deposit(200)
+	fmt.Println("=", bank.Balance())
+
+	bank.Withdraw(200)
+
+	if got, want := bank.Balance(), 300; got != want {
+		t.Errorf("Balance = %d, want %d", got, want)
+	}
+}
