@@ -49,6 +49,9 @@ func TestWithdraw(t *testing.T) {
 		done <- struct{}{}
 	}()
 
+	<-done
+	<-done
+
 	if got := bank.Balance(); got < 0 {
 		t.Errorf("Balance = %d, want more than zero", got)
 	}
