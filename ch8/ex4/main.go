@@ -9,6 +9,7 @@ import (
 	"log"
 	"net"
 	"strings"
+	"sync"
 	"time"
 )
 
@@ -21,12 +22,29 @@ func echo(c net.Conn, shout string, delay time.Duration) {
 }
 
 func handleConn(c net.Conn) {
+	var wg sync.WaitGroup
 	input := bufio.NewScanner(c)
+	first := true
 	for input.Scan() {
-		go echo(c, input.Text(), 1*time.Second)
+		wg.Add(1)
+		go func() {
+			defer wg.Done()
+			echo(c, input.Text(), 1*time.Second)
+		}()
+
+		if first {
+			first = false
+			go func() {
+				wg.Wait()
+				c.(*net.TCPConn).CloseRead()
+			}()
+		}
 	}
+
+	wg.Wait()
+
 	// NOTE: ignoring potential errors from input.Err()
-	c.Close()
+	c.(*net.TCPConn).CloseWrite()
 }
 
 func main() {
