@@ -1,14 +1,21 @@
 // Copyright © 2016 shoarai
 
 // Mandelbrot emits a PNG image of the Mandelbrot fractal.
+/**
+ * Not used goroutine: 0.503809 sec
+ * Used goroutine: 0.291495 sec
+ */
 package main
 
 import (
 	"image"
 	"image/color"
 	"image/png"
+	"log"
 	"math/cmplx"
 	"os"
+	"sync"
+	"time"
 )
 
 func main() {
@@ -17,17 +24,32 @@ func main() {
 		width, height          = 1024, 1024
 	)
 
+	start := time.Now()
+	var wg sync.WaitGroup
+
 	img := image.NewRGBA(image.Rect(0, 0, width, height))
 	for py := 0; py < height; py++ {
-		y := float64(py)/height*(ymax-ymin) + ymin
-		for px := 0; px < width; px++ {
-			x := float64(px)/width*(xmax-xmin) + xmin
-			z := complex(x, y)
-			// Image point (px, py) represents complex value z.
-			img.Set(px, py, mandelbrot(z))
-		}
+		wg.Add(1)
+		go func(py int) {
+			defer wg.Done()
+			y := float64(py)/height*(ymax-ymin) + ymin
+
+			for px := 0; px < width; px++ {
+				x := float64(px)/width*(xmax-xmin) + xmin
+				z := complex(x, y)
+
+				// Image point (px, py) represents complex value z.
+				img.Set(px, py, mandelbrot(z))
+			}
+		}(py)
 	}
+
+	wg.Wait()
+
 	png.Encode(os.Stdout, img) // NOTE: ignoring errors
+
+	end := time.Now()
+	log.Printf("%f sec\n", (end.Sub(start)).Seconds())
 }
 
 func mandelbrot(z complex128) color.Color {
