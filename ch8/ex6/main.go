@@ -8,9 +8,9 @@
 package main
 
 import (
+	"flag"
 	"fmt"
 	"log"
-	"os"
 
 	"gopl.io/ch5/links"
 )
@@ -25,11 +25,15 @@ func crawl(url string) []string {
 }
 
 func main() {
+	var depth int
+	flag.IntVar(&depth, "depth", 0, "epth of crawlled link")
+	flag.Parse()
+
 	worklist := make(chan []string)  // lists of URLs, may have duplicates
 	unseenLinks := make(chan string) // de-duplicated URLs
 
 	// Add command-line arguments to worklist.
-	go func() { worklist <- os.Args[1:] }()
+	go func() { worklist <- flag.Args() }()
 
 	// Create 20 crawler goroutines to fetch each unseen link.
 	for i := 0; i < 20; i++ {
