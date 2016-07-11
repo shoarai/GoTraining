@@ -30,5 +30,3 @@ To get a go tool:
 ```sh
 $ go get URLofTool
 ```
-Recommended tools:
-- [__goimports__](https://godoc.org/golang.org/x/tools/cmd/goimports) imports automatically package.
