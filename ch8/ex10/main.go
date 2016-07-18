@@ -24,6 +24,10 @@ func crawl(url string) []string {
 	return list
 }
 
+func cancelCrawl() {
+	fmt.Println("Cancelled")
+}
+
 func main() {
 	if len(os.Args) <= 1 {
 		fmt.Println("Input URLs as arguments")
@@ -32,6 +36,11 @@ func main() {
 
 	worklist := make(chan []string)  // lists of URLs, may have duplicates
 	unseenLinks := make(chan string) // de-duplicated URLs
+
+	go func() {
+		os.Stdin.Read(make([]byte, 1)) // read a single byte
+		cancelCrawl()
+	}()
 
 	// Add command-line arguments to worklist.
 	go func() { worklist <- os.Args[1:] }()
