@@ -40,20 +40,12 @@ func broadcaster() {
 	}
 }
 
-func handleConn(conn net.Conn) {
-	ch := make(chan string) // outgoing client messages
-	go clientWriter(conn, ch)
-
-	who := conn.RemoteAddr().String()
-	ch <- "You are " + who
-	messages <- who + " has arrived"
-	entering <- ch
-
+func timeoutClose(conn net.Conn) chan<- struct{} {
 	const timeoutSec = 5
 	done := make(chan struct{})
 
-	ticker := time.NewTicker(1 * time.Second)
 	go func() {
+		ticker := time.NewTicker(1 * time.Second)
 		for countdown := timeoutSec; countdown > 0; countdown-- {
 			select {
 			case <-done:
@@ -64,21 +56,31 @@ func handleConn(conn net.Conn) {
 		}
 
 		ticker.Stop()
-		leaving <- ch
-		messages <- who + " has left"
 		conn.Close()
 	}()
 
-	input := bufio.NewScanner(conn)
+	return done
+}
 
-	for {
-		if input.Scan() {
-			done <- struct{}{}
-			messages <- who + ": " + input.Text()
-		} else {
-			break
-		}
+func handleConn(conn net.Conn) {
+	ch := make(chan string) // outgoing client messages
+	go clientWriter(conn, ch)
+
+	who := conn.RemoteAddr().String()
+	ch <- "You are " + who
+	messages <- who + " has arrived"
+	entering <- ch
+
+	done := timeoutClose(conn)
+
+	input := bufio.NewScanner(conn)
+	for input.Scan() {
+		done <- struct{}{}
+		messages <- who + ": " + input.Text()
 	}
+
+	leaving <- ch
+	messages <- who + " has left"
 }
 
 func clientWriter(conn net.Conn, ch <-chan string) {
