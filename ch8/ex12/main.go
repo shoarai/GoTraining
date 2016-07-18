@@ -8,13 +8,13 @@ import (
 	"fmt"
 	"log"
 	"net"
+	"strings"
 )
 
-type clientInfo struct {
-	Name    string
-	Message string
+type client struct {
+	ch   chan<- string // an outgoing message channel
+	name string
 }
-type client chan<- clientInfo // an outgoing message channel
 
 var (
 	entering = make(chan client)
@@ -30,34 +30,39 @@ func broadcaster() {
 			// Broadcast incoming message to all
 			// clients' outgoing message channels.
 			for cli := range clients {
-				cli <- clientInfo{
-					Message: msg,
-				}
+				cli.ch <- msg
 			}
 
 		case cli := <-entering:
-			for range clients {
-				cli <- clientInfo{
-					Message: "aiueo",
-				}
+			var names []string
+			for k := range clients {
+				names = append(names, k.name)
 			}
 			clients[cli] = true
+			msg := "Current client: "
+			if len(names) == 0 {
+				msg += "no one"
+			} else {
+				msg += strings.Join(names, ", ")
+			}
+			cli.ch <- msg
 
 		case cli := <-leaving:
 			delete(clients, cli)
-			close(cli)
+			close(cli.ch)
 		}
 	}
 }
 
 func handleConn(conn net.Conn) {
-	ch := make(chan clientInfo) // outgoing client messages
+	ch := make(chan string) // outgoing client messages
 	go clientWriter(conn, ch)
 
 	who := conn.RemoteAddr().String()
-	ch <- clientInfo{Name: who, Message: "You are " + who}
+	ch <- "You are " + who
+	cli := client{ch: ch, name: who}
 	messages <- who + " has arrived"
-	entering <- ch
+	entering <- cli
 
 	input := bufio.NewScanner(conn)
 	for input.Scan() {
@@ -65,14 +70,14 @@ func handleConn(conn net.Conn) {
 	}
 	// NOTE: ignoring potential errors from input.Err()
 
-	leaving <- ch
+	leaving <- cli
 	messages <- who + " has left"
 	conn.Close()
 }
 
-func clientWriter(conn net.Conn, ch <-chan clientInfo) {
-	for cli := range ch {
-		fmt.Fprintln(conn, cli.Message) // NOTE: ignoring network errors
+func clientWriter(conn net.Conn, ch <-chan string) {
+	for msg := range ch {
+		fmt.Fprintln(conn, msg) // NOTE: ignoring network errors
 	}
 }
 
