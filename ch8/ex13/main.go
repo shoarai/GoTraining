@@ -40,23 +40,19 @@ func broadcaster() {
 	}
 }
 
-func timeoutClose(conn net.Conn) chan<- struct{} {
-	const timeoutSec = 5
+func timeoutClose(conn net.Conn, duration time.Duration) chan<- struct{} {
 	done := make(chan struct{})
 
 	go func() {
-		ticker := time.NewTicker(1 * time.Second)
-		for countdown := timeoutSec; countdown > 0; countdown-- {
+		ticker := time.NewTicker(duration)
+		for {
 			select {
 			case <-done:
-				countdown = timeoutSec
-			default:
+				ticker = time.NewTicker(duration)
+			case <-ticker.C:
+				conn.Close()
 			}
-			<-ticker.C
 		}
-
-		ticker.Stop()
-		conn.Close()
 	}()
 
 	return done
@@ -71,7 +67,7 @@ func handleConn(conn net.Conn) {
 	messages <- who + " has arrived"
 	entering <- ch
 
-	done := timeoutClose(conn)
+	done := timeoutClose(conn, 5*time.Minute)
 
 	input := bufio.NewScanner(conn)
 	for input.Scan() {
