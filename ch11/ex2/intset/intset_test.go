@@ -66,7 +66,7 @@ func TestInsetHas(t *testing.T) {
 		x := toIntSet(test.inputs)
 		for n, want := range test.wants {
 			if got := x.Has(n); got != want {
-				t.Errorf("Inset.Has(%s) = %q", got, want)
+				t.Errorf("Inset.Has(%b) = %t", n, got)
 			}
 		}
 	}
