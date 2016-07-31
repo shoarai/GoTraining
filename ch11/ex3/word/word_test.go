@@ -6,6 +6,7 @@ import (
 	"fmt"
 	"math/rand"
 	"time"
+	"unicode/utf8"
 )
 
 import "testing"
@@ -73,6 +74,44 @@ func TestRandomPalindromes(t *testing.T) {
 		p := randomPalindrome(rng)
 		if !IsPalindrome(p) {
 			t.Errorf("IsPalindrome(%q) = false", p)
+		}
+	}
+}
+
+// nonRandomPalindrome returns a non palindrome whose length and contents
+// are derived from the pseudo-random number generator rng.
+func randomNonPalindrome(rng *rand.Rand) string {
+	var palin string
+	for {
+		palin = randomPalindrome(rng)
+		if utf8.RuneCountInString(palin) >= 2 {
+			break
+		}
+	}
+
+	var nonPalin []rune
+	for i := range palin {
+		if i == 0 {
+			// TODO: Append palindrome text not fixed value
+			// nonPalin = append(nonPalin, rune(rng.Intn(0x1000)))
+			nonPalin = append(nonPalin, 'あ')
+		} else {
+			nonPalin = append(nonPalin, 'い')
+		}
+	}
+	return palin
+}
+
+func TestNonRandomPalindromes(t *testing.T) {
+	// Initialize a pseudo-random number generator.
+	seed := time.Now().UTC().UnixNano()
+	t.Logf("Random seed: %d", seed)
+	rng := rand.New(rand.NewSource(seed))
+
+	for i := 0; i < 1000; i++ {
+		p := randomNonPalindrome(rng)
+		if !IsPalindrome(p) {
+			t.Errorf("IsPalindrome(%q) = true", p)
 		}
 	}
 }
