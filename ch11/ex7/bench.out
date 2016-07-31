@@ -1,0 +1,12 @@
+PASS
+BenchmarkAdd-4      	50000000	        34.2 ns/op	       0 B/op	       0 allocs/op
+BenchmarkUnionWith-4	200000000	         8.41 ns/op	       0 B/op	       0 allocs/op
+BenchmarkHas-4      	50000000	        35.1 ns/op	       0 B/op	       0 allocs/op
+ok  	github.com/shoarai/GoTraining/ch11/ex7/intset	6.048s
+
+PASS
+BenchmarkAdd-4      	20000000	        97.9 ns/op	       0 B/op	       0 allocs/op
+BenchmarkUnionWith-4	  300000	      4811 ns/op	       0 B/op	       0 allocs/op
+BenchmarkHas-4      	20000000	        67.9 ns/op	       0 B/op	       0 allocs/op
+ok  	github.com/shoarai/GoTraining/ch11/ex7/intsetmap	5.004s
+
