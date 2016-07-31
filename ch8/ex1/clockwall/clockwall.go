@@ -18,14 +18,14 @@ func main() {
 	}
 	url := "localhost:" + os.Args[1]
 
-	go func() {
+	go func(url string) {
 		conn, err := net.Dial("tcp", url)
 		if err != nil {
 			log.Fatal(err)
 		}
 		defer conn.Close()
 		mustCopy(os.Stdout, conn)
-	}()
+	}(url)
 
 	url = "localhost:" + os.Args[2]
 
