@@ -25,6 +25,7 @@ type entry struct {
 // A request is a message requesting that the Func be applied to key.
 type request struct {
 	key      string
+	cancel   <-chan struct{}
 	response chan<- result // the client wants a single result
 }
 
@@ -39,13 +40,7 @@ func New(f Func) *Memo {
 
 func (memo *Memo) Get(key string, cancel <-chan struct{}) (interface{}, error) {
 	response := make(chan result)
-	memo.requests <- request{key, response}
-
-	select {
-	case <-cancel:
-		return "", fmt.Errorf("Cancelled")
-	default:
-	}
+	memo.requests <- request{key, cancel, response}
 
 	res := <-response
 	return res.value, res.err
@@ -56,6 +51,13 @@ func (memo *Memo) Close() { close(memo.requests) }
 func (memo *Memo) server(f Func) {
 	cache := make(map[string]*entry)
 	for req := range memo.requests {
+		if req.isCancelled() {
+			go func() {
+				req.response <- result{"", fmt.Errorf("Cancelled")}
+			}()
+			continue
+		}
+
 		e := cache[req.key]
 		if e == nil {
 			// This is the first request for this key.
@@ -64,6 +66,15 @@ func (memo *Memo) server(f Func) {
 			go e.call(f, req.key) // call f(key)
 		}
 		go e.deliver(req.response)
+	}
+}
+
+func (req *request) isCancelled() bool {
+	select {
+	case <-req.cancel:
+		return true
+	default:
+		return false
 	}
 }
 
