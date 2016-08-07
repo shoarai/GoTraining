@@ -23,3 +23,9 @@ func TestConcurrent(t *testing.T) {
 	defer m.Close()
 	memotest.Concurrent(t, m)
 }
+
+func TestCancel(t *testing.T) {
+	m := memo.New(httpGetBody)
+	defer m.Close()
+	memotest.Cancel(t, m)
+}

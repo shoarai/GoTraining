@@ -6,6 +6,8 @@
 // This implementation uses a monitor goroutine.
 package memo
 
+import "fmt"
+
 // Func is the type of the function to memoize.
 type Func func(key string) (interface{}, error)
 
@@ -35,9 +37,16 @@ func New(f Func) *Memo {
 	return memo
 }
 
-func (memo *Memo) Get(key string) (interface{}, error) {
+func (memo *Memo) Get(key string, cancel <-chan struct{}) (interface{}, error) {
 	response := make(chan result)
 	memo.requests <- request{key, response}
+
+	select {
+	case <-cancel:
+		return "", fmt.Errorf("Cancelled")
+	default:
+	}
+
 	res := <-response
 	return res.value, res.err
 }

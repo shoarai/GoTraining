@@ -49,20 +49,15 @@ func incomingURLs() <-chan string {
 }
 
 type M interface {
-	Get(key string) (interface{}, error)
+	Get(key string, cancel <-chan struct{}) (interface{}, error)
 }
 
-/*
-//!+seq
-	m := memo.New(httpGetBody)
-//!-seq
-*/
-
+// m := memo.New(httpGetBody)
 func Sequential(t *testing.T, m M) {
-	//!+seq
 	for url := range incomingURLs() {
 		start := time.Now()
-		value, err := m.Get(url)
+		cancel := make(chan struct{})
+		value, err := m.Get(url, cancel)
 		if err != nil {
 			log.Print(err)
 			continue
@@ -70,24 +65,18 @@ func Sequential(t *testing.T, m M) {
 		fmt.Printf("%s, %s, %d bytes\n",
 			url, time.Since(start), len(value.([]byte)))
 	}
-	//!-seq
 }
 
-/*
-//!+conc
-	m := memo.New(httpGetBody)
-//!-conc
-*/
-
+// m := memo.New(httpGetBody)
 func Concurrent(t *testing.T, m M) {
-	//!+conc
 	var n sync.WaitGroup
 	for url := range incomingURLs() {
 		n.Add(1)
 		go func(url string) {
 			defer n.Done()
 			start := time.Now()
-			value, err := m.Get(url)
+			cancel := make(chan struct{})
+			value, err := m.Get(url, cancel)
 			if err != nil {
 				log.Print(err)
 				return
@@ -97,5 +86,19 @@ func Concurrent(t *testing.T, m M) {
 		}(url)
 	}
 	n.Wait()
-	//!-conc
+}
+
+// m := memo.New(httpGetBody)
+func Cancel(t *testing.T, m M) {
+	url := "https://golang.org"
+
+	cancel := make(chan struct{})
+	go func() {
+		cancel <- struct{}{}
+	}()
+
+	value, err := m.Get(url, cancel)
+	if err == nil {
+		t.Errorf("Get(%q) = , nil", value)
+	}
 }
