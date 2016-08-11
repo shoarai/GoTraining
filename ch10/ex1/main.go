@@ -8,6 +8,7 @@ import (
 	"flag"
 	"fmt"
 	"image"
+	"image/gif"
 	"image/jpeg"
 	"image/png" // register PNG decoder
 	"io"
@@ -37,6 +38,8 @@ func toImage(in io.Reader, out io.Writer, format string) error {
 		return jpeg.Encode(out, img, &jpeg.Options{Quality: 95})
 	case "png":
 		return png.Encode(out, img)
+	case "gif":
+		return gif.Encode(out, img, &gif.Options{})
 	default:
 		return fmt.Errorf("Unsupported format")
 	}
