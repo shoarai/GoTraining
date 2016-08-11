@@ -1,0 +1,13 @@
+CPU Number: 4
+
+GOMAXPROCS: 1
+808.060315ms elapsed
+
+GOMAXPROCS: 2
+794.277931ms elapsed
+
+GOMAXPROCS: 3
+833.483006ms elapsed
+
+GOMAXPROCS: 4
+1.12185821s elapsed
