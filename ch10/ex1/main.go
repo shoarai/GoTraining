@@ -5,28 +5,41 @@
 package main
 
 import (
+	"flag"
 	"fmt"
 	"image"
 	"image/jpeg"
-	_ "image/png" // register PNG decoder
+	"image/png" // register PNG decoder
 	"io"
 	"os"
 )
 
 func main() {
-	if err := toJPEG(os.Stdin, os.Stdout); err != nil {
+	var format = flag.String("format", "jpeg", "output format")
+	flag.Parse()
+
+	if err := toImage(os.Stdin, os.Stdout, *format); err != nil {
 		fmt.Fprintf(os.Stderr, "jpeg: %v\n", err)
 		os.Exit(1)
 	}
 }
 
-func toJPEG(in io.Reader, out io.Writer) error {
+func toImage(in io.Reader, out io.Writer, format string) error {
 	img, kind, err := image.Decode(in)
 	if err != nil {
 		return err
 	}
 	fmt.Fprintln(os.Stderr, "Input format =", kind)
-	return jpeg.Encode(out, img, &jpeg.Options{Quality: 95})
+	fmt.Fprintln(os.Stderr, "Output format =", format)
+
+	switch format {
+	case "jpeg":
+		return jpeg.Encode(out, img, &jpeg.Options{Quality: 95})
+	case "png":
+		return png.Encode(out, img)
+	default:
+		return fmt.Errorf("Unsupported format")
+	}
 }
 
 /*
