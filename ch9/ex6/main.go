@@ -26,7 +26,6 @@ func main() {
 
 	numCPU := runtime.NumCPU()
 	fmt.Printf("CPU Number: %d\n", runtime.NumCPU())
-	// for i := numCPU; i > 0; i-- {
 	for i := 1; i <= numCPU; i++ {
 		fmt.Printf("\n")
 		runtime.GOMAXPROCS(i)
