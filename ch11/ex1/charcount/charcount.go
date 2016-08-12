@@ -5,9 +5,7 @@ package charcount
 
 import (
 	"bufio"
-	"fmt"
 	"io"
-	"os"
 	"unicode"
 	"unicode/utf8"
 )
@@ -18,7 +16,7 @@ type CharCount struct {
 	Invalid int
 }
 
-func CountChar(r io.Reader) CharCount {
+func CountChar(r io.Reader) (*CharCount, error) {
 	counts := make(map[rune]int)    // counts of Unicode characters
 	var utflen [utf8.UTFMax + 1]int // count of lengths of UTF-8 encodings
 	invalid := 0                    // count of invalid UTF-8 characters
@@ -30,8 +28,7 @@ func CountChar(r io.Reader) CharCount {
 			break
 		}
 		if err != nil {
-			fmt.Fprintf(os.Stderr, "charcount: %v\n", err)
-			os.Exit(1)
+			return nil, err
 		}
 		if r == unicode.ReplacementChar && n == 1 {
 			invalid++
@@ -41,7 +38,7 @@ func CountChar(r io.Reader) CharCount {
 		utflen[n]++
 	}
 
-	return CharCount{
+	return &CharCount{
 		counts, utflen, invalid,
-	}
+	}, nil
 }

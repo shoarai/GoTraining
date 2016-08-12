@@ -31,16 +31,20 @@ func TestCountChar(t *testing.T) {
 
 	for _, test := range tests {
 		reader := strings.NewReader(test.input)
-		charCount := charcount.CountChar(reader)
+		charCount, err := charcount.CountChar(reader)
+		if err != nil {
+			t.Errorf("CountChar(%s) error: %s", test.input, err)
+			continue
+		}
 
-		if !isSameCharCount(charCount, test.want) {
+		if !isSameCharCount(charCount, &test.want) {
 			t.Errorf("CountChar(%s) = %v", test.input, charCount)
 			printCharCount(charCount)
 		}
 	}
 }
 
-func isSameCharCount(charCount1, charCount2 charcount.CharCount) bool {
+func isSameCharCount(charCount1, charCount2 *charcount.CharCount) bool {
 	for c, n1 := range charCount1.Counts {
 		if n2, ok := charCount2.Counts[c]; !ok || n1 != n2 {
 			return false
@@ -55,7 +59,7 @@ func isSameCharCount(charCount1, charCount2 charcount.CharCount) bool {
 	return true
 }
 
-func printCharCount(charCount charcount.CharCount) {
+func printCharCount(charCount *charcount.CharCount) {
 	fmt.Printf("rune\tcount\n")
 	for c, n := range charCount.Counts {
 		fmt.Printf("%q\t%d\n", c, n)
