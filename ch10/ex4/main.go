@@ -32,13 +32,15 @@ func main() {
 		fmt.Println("Input package as arugument")
 		return
 	}
-	packName := os.Args[1]
 
-	pack, err := packageList(packName)
-	if err != nil {
-		log.Fatal(err)
+	for _, packName := range os.Args[1:] {
+		pack, err := packageList(packName)
+		if err != nil {
+			log.Fatal(err)
+			continue
+		}
+		fmt.Printf("%v", pack)
 	}
-	fmt.Printf("%v", pack)
 }
 
 func packageList(packName string) (*Package, error) {
