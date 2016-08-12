@@ -42,7 +42,7 @@ func TestCountChar(t *testing.T) {
 
 func isSameCharCount(charCount1, charCount2 charcount.CharCount) bool {
 	for c, n1 := range charCount1.Counts {
-		if n2, ok := charCount2.Counts[c]; !ok && n1 != n2 {
+		if n2, ok := charCount2.Counts[c]; !ok || n1 != n2 {
 			return false
 		}
 	}
