@@ -19,13 +19,13 @@ func main() {
 	var format = flag.String("format", "jpeg", "output format")
 	flag.Parse()
 
-	if err := toImage(os.Stdin, os.Stdout, *format); err != nil {
+	if err := convertImageFormat(os.Stdin, os.Stdout, *format); err != nil {
 		fmt.Fprintf(os.Stderr, "jpeg: %v\n", err)
 		os.Exit(1)
 	}
 }
 
-func toImage(in io.Reader, out io.Writer, format string) error {
+func convertImageFormat(in io.Reader, out io.Writer, format string) error {
 	img, kind, err := image.Decode(in)
 	if err != nil {
 		return err
@@ -44,18 +44,3 @@ func toImage(in io.Reader, out io.Writer, format string) error {
 		return fmt.Errorf("Unsupported format")
 	}
 }
-
-/*
-//!+with
-$ go build gopl.io/ch3/mandelbrot
-$ go build gopl.io/ch10/jpeg
-$ ./mandelbrot | ./jpeg >mandelbrot.jpg
-Input format = png
-//!-with
-
-//!+without
-$ go build gopl.io/ch10/jpeg
-$ ./mandelbrot | ./jpeg >mandelbrot.jpg
-jpeg: image: unknown format
-//!-without
-*/
