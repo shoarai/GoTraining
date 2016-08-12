@@ -10,7 +10,7 @@ import (
 	"image"
 	"image/gif"
 	"image/jpeg"
-	"image/png" // register PNG decoder
+	"image/png"
 	"io"
 	"os"
 )
