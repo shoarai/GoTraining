@@ -1,7 +1,7 @@
 // Copyright © 2016 shoarai
 
-// The jpeg command reads a PNG image from the standard input
-// and writes it as a JPEG image to the standard output.
+// The main command reads a image from the standard input
+// and writes it as a image in a format to the standard output.
 package main
 
 import (
@@ -10,7 +10,7 @@ import (
 	"image"
 	"image/gif"
 	"image/jpeg"
-	"image/png" // register PNG decoder
+	"image/png"
 	"io"
 	"os"
 )
