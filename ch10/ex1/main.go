@@ -34,7 +34,7 @@ func convertImageFormat(in io.Reader, out io.Writer, format string) error {
 	fmt.Fprintln(os.Stderr, "Output format =", format)
 
 	switch format {
-	case "jpeg":
+	case "jpeg", "jpg":
 		return jpeg.Encode(out, img, &jpeg.Options{Quality: 95})
 	case "png":
 		return png.Encode(out, img)
