@@ -41,6 +41,6 @@ func convertImageFormat(in io.Reader, out io.Writer, format string) error {
 	case "gif":
 		return gif.Encode(out, img, &gif.Options{})
 	default:
-		return fmt.Errorf("Unsupported format")
+		return fmt.Errorf("Unsupported format %s", format)
 	}
 }
