@@ -6,7 +6,6 @@ import (
 	"fmt"
 	"log"
 	"os"
-	"runtime"
 	"strconv"
 	"time"
 )
@@ -22,8 +21,21 @@ func main() {
 		log.Fatal(err)
 	}
 
+	fmt.Printf("Number of pipline: %d\n", num)
+
 	// Create pipeline
 	start := time.Now()
+	in, out := createPipeline(num)
+	fmt.Printf("Create: %s elapsed\n", time.Since(start))
+
+	// Start pipeline
+	start = time.Now()
+	in <- struct{}{}
+	<-out
+	fmt.Printf("Transmission: %s elapsed\n", time.Since(start))
+}
+
+func createPipeline(num int) (chan<- struct{}, <-chan struct{}) {
 	firstIn := make(chan struct{})
 	var in *chan struct{}
 	var lastOut *chan struct{}
@@ -39,14 +51,7 @@ func main() {
 		lastOut = &out
 	}
 
-	fmt.Printf("NumGoroutine: %d\n", runtime.NumGoroutine())
-	fmt.Printf("Create: %s elapsed\n", time.Since(start))
-
-	// Start pipeline
-	start = time.Now()
-	firstIn <- struct{}{}
-	<-(*lastOut)
-	fmt.Printf("Run: %s elapsed\n", time.Since(start))
+	return firstIn, *lastOut
 }
 
 func pipeline(in <-chan struct{}, out chan<- struct{}) {
