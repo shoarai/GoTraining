@@ -5,27 +5,28 @@ package ftp
 import (
 	"bufio"
 	"fmt"
-	"io"
 	"io/ioutil"
 	"net"
 	"os"
 	"strings"
 )
 
-// type FtpConnection struct {
-// 	conn       net.Conn
-// 	currentDir string
-// }
+type FtpConn struct {
+	conn       net.Conn
+	currentDir string
+}
 
 func HandleConnection(conn net.Conn) {
 	defer conn.Close()
+
+	ftpConn := FtpConn{conn, "./"}
 
 	fmt.Fprintf(conn, "> ")
 
 	input := bufio.NewScanner(conn)
 	for input.Scan() {
 		text := input.Text()
-		err := execute(conn, text)
+		err := ftpConn.execute(text)
 		if err != nil {
 			fmt.Fprintln(conn, err)
 		}
@@ -34,7 +35,7 @@ func HandleConnection(conn net.Conn) {
 	}
 }
 
-func execute(conn net.Conn, text string) error {
+func (ftpConn *FtpConn) execute(text string) error {
 	texts := strings.Split(text, " ")
 	cmd := texts[0]
 	args := texts[1:]
@@ -42,7 +43,9 @@ func execute(conn net.Conn, text string) error {
 	fmt.Println(cmd, args)
 	switch cmd {
 	case "ls":
-		list(conn, args)
+		ftpConn.list(args)
+	case "cd":
+		ftpConn.cd(args)
 	default:
 		return fmt.Errorf("Invalid command: %s", cmd)
 	}
@@ -50,29 +53,39 @@ func execute(conn net.Conn, text string) error {
 	return nil
 }
 
-func list(writer io.Writer, args []string) error {
+func (ftpConn *FtpConn) cd(args []string) {
+	if len(args) == 0 {
+		args = []string{"."}
+	}
+
+	ftpConn.currentDir += args[0] + "/"
+}
+
+func (ftpConn *FtpConn) list(args []string) {
 	if len(args) == 0 {
 		args = []string{"."}
 	}
 
 	for _, arg := range args {
-		info, err := os.Stat(arg)
+		path := ftpConn.currentDir + arg
+		info, err := os.Stat(path)
 		if err != nil {
 			// No such file or directory
-			return err
+			fmt.Fprintf(ftpConn.conn, "%s\n", err)
+			continue
 		}
 
 		if info.IsDir() {
-			infos, err := ioutil.ReadDir(arg)
+			infos, err := ioutil.ReadDir(path)
 			if err != nil {
-				return err
+				fmt.Fprintf(ftpConn.conn, "%s\n", err)
+				continue
 			}
 			for _, info := range infos {
-				fmt.Fprintf(writer, "%s\n", info.Name())
+				fmt.Fprintf(ftpConn.conn, "%s\n", info.Name())
 			}
 		} else {
-			fmt.Fprintf(writer, "%s\n", info.Name())
+			fmt.Fprintf(ftpConn.conn, "%s\n", info.Name())
 		}
 	}
-	return nil
 }
