@@ -46,6 +46,8 @@ func (ftpConn *FtpConn) execute(text string) error {
 		ftpConn.cd(args)
 	case "ls":
 		ftpConn.list(args)
+	case "get":
+		ftpConn.get(args)
 	case "close":
 		ftpConn.close()
 	default:
@@ -91,14 +93,27 @@ func (ftpConn *FtpConn) list(args []string) {
 		if info.IsDir() {
 			infos, err := ioutil.ReadDir(path)
 			if err != nil {
-				ftpConn.reply(info.Name())
+				ftpConn.error(err)
 				continue
 			}
 			for _, info := range infos {
 				ftpConn.reply(info.Name())
 			}
 		} else {
+			ftpConn.reply(info.Name())
 		}
+	}
+}
+
+func (ftpConn *FtpConn) get(args []string) {
+	for _, arg := range args {
+		b, err := ioutil.ReadFile(arg)
+		if err != nil {
+			ftpConn.error(err)
+			continue
+		}
+
+		ftpConn.reply(string(b))
 	}
 }
 
