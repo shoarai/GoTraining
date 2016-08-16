@@ -58,7 +58,18 @@ func (ftpConn *FtpConn) cd(args []string) {
 		args = []string{"."}
 	}
 
-	ftpConn.currentDir += args[0] + "/"
+	path := ftpConn.currentDir + args[0]
+	info, err := os.Stat(path)
+	if err != nil {
+		ftpConn.error(err)
+		return
+	}
+
+	if info.IsDir() {
+		ftpConn.currentDir = path + "/"
+	} else {
+		ftpConn.reply("not a directory")
+	}
 }
 
 func (ftpConn *FtpConn) list(args []string) {
@@ -71,21 +82,28 @@ func (ftpConn *FtpConn) list(args []string) {
 		info, err := os.Stat(path)
 		if err != nil {
 			// No such file or directory
-			fmt.Fprintf(ftpConn.conn, "%s\n", err)
+			ftpConn.error(err)
 			continue
 		}
 
 		if info.IsDir() {
 			infos, err := ioutil.ReadDir(path)
 			if err != nil {
-				fmt.Fprintf(ftpConn.conn, "%s\n", err)
+				ftpConn.reply(info.Name())
 				continue
 			}
 			for _, info := range infos {
-				fmt.Fprintf(ftpConn.conn, "%s\n", info.Name())
+				ftpConn.reply(info.Name())
 			}
 		} else {
-			fmt.Fprintf(ftpConn.conn, "%s\n", info.Name())
 		}
 	}
+}
+
+func (ftpConn *FtpConn) reply(msg string) {
+	fmt.Fprintf(ftpConn.conn, "%s\n", msg)
+}
+
+func (ftpConn *FtpConn) error(err error) {
+	fmt.Fprintf(ftpConn.conn, "%s\n", err)
 }
