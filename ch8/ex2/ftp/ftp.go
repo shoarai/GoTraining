@@ -42,10 +42,12 @@ func (ftpConn *FtpConn) execute(text string) error {
 
 	fmt.Println(cmd, args)
 	switch cmd {
-	case "ls":
-		ftpConn.list(args)
 	case "cd":
 		ftpConn.cd(args)
+	case "ls":
+		ftpConn.list(args)
+	case "close":
+		ftpConn.close()
 	default:
 		return fmt.Errorf("Invalid command: %s", cmd)
 	}
@@ -98,6 +100,10 @@ func (ftpConn *FtpConn) list(args []string) {
 		} else {
 		}
 	}
+}
+
+func (ftpConn *FtpConn) close() {
+	ftpConn.conn.Close()
 }
 
 func (ftpConn *FtpConn) reply(msg string) {
