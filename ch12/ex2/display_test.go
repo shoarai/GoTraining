@@ -210,7 +210,7 @@ func Test(t *testing.T) {
 	type P *P
 	var p P
 	p = &p
-	if false {
+	if true {
 		Display("p", p)
 		// Output:
 		// Display p (display.P):
@@ -221,7 +221,7 @@ func Test(t *testing.T) {
 	type M map[string]M
 	m := make(M)
 	m[""] = m
-	if false {
+	if true {
 		Display("m", m)
 		// Output:
 		// Display m (display.M):
@@ -232,7 +232,7 @@ func Test(t *testing.T) {
 	type S []S
 	s := make(S, 1)
 	s[0] = s
-	if false {
+	if true {
 		Display("s", s)
 		// Output:
 		// Display s (display.S):
@@ -246,7 +246,7 @@ func Test(t *testing.T) {
 	}
 	var c Cycle
 	c = Cycle{42, &c}
-	if false {
+	if true {
 		Display("c", c)
 		// Output:
 		// Display c (display.Cycle):
