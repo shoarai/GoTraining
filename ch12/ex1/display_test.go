@@ -7,6 +7,7 @@ import (
 	"net"
 	"os"
 	"reflect"
+	"strconv"
 	"sync"
 	"testing"
 
@@ -147,6 +148,21 @@ func Example_movie() {
 		strangelove.Sequel = nil
 		//!-output
 	*/
+}
+
+func TestDisplayMap(t *testing.T) {
+	type key struct {
+		n   int
+		str string
+	}
+	n := 5
+	test := make(map[key]int)
+	for i := 0; i < n; i++ {
+		s := strconv.FormatInt(int64(i), 10)
+		test[key{i, s}] = i
+	}
+
+	Display("test", test)
 }
 
 // This test ensures that the program terminates without crashing.

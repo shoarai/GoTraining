@@ -38,7 +38,17 @@ func formatAtom(v reflect.Value) string {
 		reflect.Slice, reflect.Map:
 		return v.Type().String() + " 0x" +
 			strconv.FormatUint(uint64(v.Pointer()), 16)
-	default: // reflect.Array, reflect.Struct, reflect.Interface
+	case reflect.Struct:
+		str := fmt.Sprintf("%s{", v.Type().String())
+		for i := 0; i < v.NumField(); i++ {
+			if i != 0 {
+				str += ", "
+			}
+			str += fmt.Sprintf("%s = %s",
+				v.Type().Field(i).Name, formatAtom(v.Field(i)))
+		}
+		return str + "}"
+	default: // reflect.Array, reflect.Interface
 		return v.Type().String() + " value"
 	}
 }
