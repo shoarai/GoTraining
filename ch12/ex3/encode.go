@@ -5,6 +5,7 @@ package sexpr
 import (
 	"bytes"
 	"fmt"
+	"math/cmplx"
 	"reflect"
 )
 
@@ -88,7 +89,11 @@ func encode(buf *bytes.Buffer, v reflect.Value) error {
 			buf.WriteString("nil")
 		}
 
-	default: // float, complex, chan, func, interface
+	case reflect.Complex64, reflect.Complex128:
+		c := v.Complex()
+		fmt.Fprintf(buf, "#C(%f %f)", cmplx.Abs(c), cmplx.Phase(c))
+
+	default: // float, chan, func, interface
 		return fmt.Errorf("unsupported type: %s", v.Type())
 	}
 	return nil

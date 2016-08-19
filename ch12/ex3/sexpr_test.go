@@ -81,3 +81,13 @@ func TestMarshalBool(t *testing.T) {
 	}
 	t.Logf("Marshal() = %s\n", data)
 }
+
+func TestMarshalComplex(t *testing.T) {
+	test := []complex128{complex(1, 2), complex(1.1, -2.1)}
+
+	data, err := Marshal(test)
+	if err != nil {
+		t.Fatalf("Marshal failed: %v", err)
+	}
+	t.Logf("Marshal() = %s\n", data)
+}
