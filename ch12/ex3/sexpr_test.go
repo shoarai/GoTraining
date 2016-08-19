@@ -71,3 +71,13 @@ func Test(t *testing.T) {
 	}
 	t.Logf("MarshalIdent() = %s\n", data)
 }
+
+func TestMarshalBool(t *testing.T) {
+	test := []bool{true, false}
+
+	data, err := Marshal(test)
+	if err != nil {
+		t.Fatalf("Marshal failed: %v", err)
+	}
+	t.Logf("Marshal() = %s\n", data)
+}
