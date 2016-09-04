@@ -63,11 +63,4 @@ func Test(t *testing.T) {
 	if !reflect.DeepEqual(movie, strangelove) {
 		t.Fatal("not equal")
 	}
-
-	// Pretty-print it:
-	data, err = MarshalIndent(strangelove)
-	if err != nil {
-		t.Fatal(err)
-	}
-	t.Logf("MarshalIdent() = %s\n", data)
 }
