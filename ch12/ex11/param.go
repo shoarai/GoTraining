@@ -4,12 +4,36 @@
 package params
 
 import (
+	"bytes"
 	"fmt"
 	"net/http"
 	"reflect"
 	"strconv"
 	"strings"
 )
+
+func Pack(ptr interface{}) string {
+	v := reflect.ValueOf(ptr)
+	if v.Kind() != reflect.Struct {
+		return ""
+	}
+
+	var buf bytes.Buffer
+	for i := 0; i < v.NumField(); i++ {
+		fieldInfo := v.Type().Field(i)
+		name := fieldInfo.Tag.Get("http")
+		if name == "" {
+			name = strings.ToLower(fieldInfo.Name)
+		}
+		field := v.Field(i)
+
+		if buf.Len() != 0 {
+			buf.WriteRune('&')
+		}
+		fmt.Fprintf(&buf, "%v=%v", name, field)
+	}
+	return buf.String()
+}
 
 // Unpack populates the fields of the struct pointed to by ptr
 // from the HTTP request parameters in req.
