@@ -161,8 +161,14 @@ func TestDisplayMap(t *testing.T) {
 		s := strconv.FormatInt(int64(i), 10)
 		test[key{i, s}] = i
 	}
-
 	Display("test", test)
+	// Unordered output:
+	// Display test (map[display.key]int):
+	// test[display.key{n = 0, str = "0"}] = 0
+	// test[display.key{n = 1, str = "1"}] = 1
+	// test[display.key{n = 2, str = "2"}] = 2
+	// test[display.key{n = 3, str = "3"}] = 3
+	// test[display.key{n = 4, str = "4"}] = 4
 }
 
 // This test ensures that the program terminates without crashing.
