@@ -13,16 +13,23 @@ func TestPack(t *testing.T) {
 		{struct {
 			str1 string
 			str2 string
-		}{"golang", "programming"}, "str1=golang&str2=programming"},
+		}{"golang", "programming"},
+			"str1=golang&str2=programming"},
 		{struct {
 			str1 int `http:"str1"`
-		}{1}, "str1=1"},
+		}{1},
+			"str1=1"},
+		// TODO: Array
+		// {struct {
+		// 	str []string
+		// }{[]string{"golang", "programming"}},
+		// 	"str=golang&str=programming"},
 	}
 
 	for _, test := range tests {
 		got := Pack(test.val)
 		if got != test.want {
-			t.Errorf("Pack(%v) = %v, want %v", test.val, test.want, got)
+			t.Errorf("Pack(%v) = %v, want %v", test.val, got, test.want)
 		}
 	}
 }
