@@ -91,7 +91,6 @@ func Example_array() {
 }
 
 func Example_movie() {
-	//!+movie
 	type Movie struct {
 		Title, Subtitle string
 		Year            int
@@ -100,8 +99,6 @@ func Example_movie() {
 		Oscars          []string
 		Sequel          *string
 	}
-	//!-movie
-	//!+strangelove
 	strangelove := Movie{
 		Title:    "Dr. Strangelove",
 		Subtitle: "How I Learned to Stop Worrying and Love the Bomb",
@@ -123,7 +120,6 @@ func Example_movie() {
 			"Best Picture (Nomin.)",
 		},
 	}
-	//!-strangelove
 	Display("strangelove", strangelove)
 
 	// We don't use an Output: comment since displaying
@@ -149,8 +145,7 @@ func Example_movie() {
 		//!-output
 	*/
 }
-
-func TestDisplayMap(t *testing.T) {
+func Example_MapOfKeyAsStruct() {
 	type key struct {
 		n   int
 		str string
@@ -170,6 +165,7 @@ func TestDisplayMap(t *testing.T) {
 	// test[display.key{n = 3, str = "3"}] = 3
 	// test[display.key{n = 4, str = "4"}] = 4
 }
+
 
 // This test ensures that the program terminates without crashing.
 func Test(t *testing.T) {
