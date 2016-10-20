@@ -9,7 +9,7 @@ import (
 	"unsafe"
 )
 
-const accuracy = 0.000000001
+const accuracy = 1e-9
 
 func equal(x, y reflect.Value, seen map[comparison]bool) bool {
 	if !x.IsValid() || !y.IsValid() {
@@ -19,9 +19,6 @@ func equal(x, y reflect.Value, seen map[comparison]bool) bool {
 		return false
 	}
 
-	// ...cycle check omitted (shown later)...
-
-	//!+cyclecheck
 	// cycle check
 	if x.CanAddr() && y.CanAddr() {
 		xptr := unsafe.Pointer(x.UnsafeAddr())
@@ -99,13 +96,10 @@ func equal(x, y reflect.Value, seen map[comparison]bool) bool {
 	panic("unreachable")
 }
 
-//!+comparison
 // Equal reports whether x and y are deeply equal.
-//!-comparison
 //
 // Map keys are always compared with ==, not deeply.
 // (This matters for keys containing pointers or interfaces.)
-//!+comparison
 func Equal(x, y interface{}) bool {
 	seen := make(map[comparison]bool)
 	return equal(reflect.ValueOf(x), reflect.ValueOf(y), seen)
@@ -115,5 +109,3 @@ type comparison struct {
 	x, y unsafe.Pointer
 	t    reflect.Type
 }
-
-//!-comparison

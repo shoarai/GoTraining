@@ -36,10 +36,10 @@ func TestEqual(t *testing.T) {
 		{1, 2, false},   // different values
 		{1, 1.0, false}, // different types
 		// About value
-		{1.0, 1.0000000009, true},
-		{1.0, 1.000000001, false},
-		{-1.0, -1.0000000009, true},
-		{-1.0, -1.000000001, false},
+		{1.0, 1 + 9e-10, true},
+		{1.0, 1 + 1e-9, false},
+		{-1.0, -(1 + 9e-10), true},
+		{-1.0, -(1 + 1e-9), false},
 		{"foo", "foo", true},
 		{"foo", "bar", false},
 		{mystring("foo"), "foo", false}, // different types
